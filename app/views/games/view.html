@@ -54,10 +54,10 @@
     </ul>
     <div class="tab-content">
       <div class="tab-pane" id="free-form">
-        <form role="form">
+        <form role="form" ng-submit="addFreeFormStory()">
           <div class="form-group">
-            <label for="exampleInputEmail1">Story</label>
-            <textarea class="form-control" id="exampleInputEmail1" rows="10" placeholder="Enter story"></textarea>
+            <label for="free-form-story">Story</label>
+            <textarea ng-model="freeForm.story" class="form-control" id="free-form-story" rows="10" placeholder="Enter story"></textarea>
             <p class="help-block">Type or copy and paste your story as free-form text.</p>
           </div>
           <button type="submit" class="btn btn-success">Add story</button>
