@@ -1,8 +1,9 @@
 
 <div class="row">
   <div class="col-md-8">
-    <p>Game description</p>
-
+    <!-- Game -->
+    <h4>{{game.description}}</h4>
+    <p>
     <!-- Story -->
     <div class="bordered">
       <h5>As a/an user I would like to see so that my games</h5>
@@ -49,6 +50,7 @@
     <ul class="nav nav-tabs">
       <li><a href="#free-form" data-toggle="tab" >Free-form</a></li>
       <li class="active"><a href="#structured" data-toggle="tab">Structured</a></li>
+      <li><a href="#story-list" data-toggle="tab">Story list</a>
     </ul>
     <div class="tab-content">
       <div class="tab-pane" id="free-form">
@@ -84,24 +86,41 @@
            or <a href="#">Cancel</a>
         </form>
       </div>
+      <div class="tab-pane" id="story-list">
+        <div ng-show="game.stories">
+          <p>Select a story to estimate</p>
+          <ol ng-show="game.stories">
+            <li ng-repeat="story in game.stories"><a href="" ng-click="estimate(story)">{{story.name}}</a></li>
+          </ol>
+        </div>
+        <div ng-hide="game.stories">
+          <p ng-hide="game.stories">You have no stories.</p>
+        </div>
+      </div>
     </div>
   </div>
   <div class="col-md-4">
     <div class="affix">
-      <h5>Estimator access (<a href="#">lock</a>)</h5>
-      <p><code>http://codefish.planningpoker.com/zt69nt</code></p>
-      <p>Estimators can join the game at the above URL.</p>
-      <p><a href="#" class="btn btn-info btn-xs">Send it by email</a></p>
-      <hr>
-      <h5>Done playing?</h5>
-      <p><a href="#" class="btn btn-success btn-xs">Complete game</a></p>
-      <p class="text-muted"><small>You can export all estimates as HTML or CSV after you have completed the game.</small></p>
-      <hr>
-      <h5>Participants</h5>
-      <ul class="list-unstyled">
-        <li>Everton Yoshitani (moderator)</li>
-        <li>User1</li>
-      </ul>
+      <div>
+        <h5>Estimator access</h5>
+        <p><code>http://firepoker.aws.com/zt69nt</code></p>
+        <p>Estimators can join the game at the above URL.</p>
+        <!-- <p><a href="#" class="btn btn-info btn-xs">Send it by email</a></p> -->
+      </div>
+      <div ng-show="authenticated">
+        <hr>
+        <h5>Done playing?</h5>
+        <p><a href="#" class="btn btn-success btn-xs">Complete game</a></p>
+        <p class="text-muted"><small>You can export all estimates as HTML or CSV after you have completed the game.</small></p>
+      </div>
+      <div>
+        <hr>
+        <h5>Participants</h5>
+        <ul class="list-unstyled">
+          <li>Everton Yoshitani (moderator)</li>
+          <li>User1</li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

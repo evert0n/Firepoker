@@ -3,21 +3,21 @@
   <div class="col-md-6">
     <h1>Create a new game</h1>
     <p>You can start inviting estimators after you have created the game.</p>
-    <form role="form">
+    <form role="form" ng-submit="createGame()">
       <div class="form-group">
-        <label for="exampleInputEmail1">Name</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter full name">
+        <label for="name">Name</label>
+        <input ng-model="game.name" type="text" class="form-control" id="name" placeholder="Enter game name">
         <p class="help-block">For example: 'FooBar development project', 'CMS rewrite', or 'Legacy DB migration'</p>
       </div>
       <div class="form-group">
-        <label for="exampleInputEmail1">Description (optional)</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+        <label for="description">Description (optional)</label>
+        <input ng-model="game.description" type="text" class="form-control" id="description" placeholder="Enter game description">
       </div>
       <h3>Import</h3>
       <div class="form-group">
-        <label for="exampleInputEmail1">Stories (optional, Maximum of 50 rows)</label>
-        <textarea class="form-control" id="exampleInputPassword1" placeholder="Enter stories"></textarea>
-        <p class="help-block">Copy and paste from a spreadsheet to import stories into your game. Make sure the first row contains field names.</p>
+        <label for="stories">Stories (optional, one per line, maximum of 50 rows)</label>
+        <textarea ng-model="game.stories" rows="10" class="form-control" id="stories" placeholder="Enter stories"></textarea>
+        <p class="help-block">Copy and paste from a spreadsheet to import stories into your game. <!-- Make sure the first row contains field names. --></p>
       </div>
       <button type="submit" class="btn btn-success">Create game</button>
        or <a href="#">Cancel</a>

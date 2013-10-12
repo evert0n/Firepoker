@@ -2,21 +2,20 @@
 <div class="row">
   <div class="col-md-6">
     <h1>Account</h1>
-    <form role="form" ng-submit="settings.add(attribute)">
+    <form role="form" ng-submit="saveSettings()">
       <h3>Change your account details</h3>
       <div class="form-group">
         <label for="fullname">Full name</label>
-        <input ng-model="attribute.fullName" type="text" class="form-control" id="fullname" placeholder="Enter full name">
+        <input ng-model="settings.fullname" type="text" class="form-control" id="fullname" placeholder="Enter full name">
       </div>
       <div class="form-group">
-        <label for="location">Email address</label>
-        <input ng-model="attribute.location" type="text" class="form-control" id="location" placeholder="Location">
+        <label for="location">Location</label>
+        <input ng-model="settings.location" type="text" class="form-control" id="location" placeholder="Location">
       </div>
-      
       <h3>Choose another deck</h3>
       <p>Choose the set of estimate cards you want to use.</p>
       <div class="form-group">
-        <select class="form-control" ng-model="attribute.cardDeck">
+        <select class="form-control" ng-model="settings.deck">
           <option value="suit1">0, ½, 1, 2, 3, 5, 8, 13, 20, 40, 100, and ?</option>
           <option value="suit2">0, 1, 2, 4, 8, 16, 32, 64, 128, and ?</option>
         </select>

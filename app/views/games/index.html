@@ -1,14 +1,16 @@
-<div class="row">
+<h1>Games</h1>
+
+<div ng-show="games.length" class="row">
   <div class="col-md-8">
-    <h1>Games</h1>
     <p>&nbsp;</p>
-    <div class="bordered">
+    <div ng-repeat="game in games" class="bordered">
       <ul class="media-list">
         <li class="media">
           <div class="media-body">
-            <h4 class="media-heading"><a href="/#/games/1">Game name</a></h4>
-            <p>Game description</p>
-            <p><small>11 October 2013, 09:42 UTC | 10 stories</small></p>
+            <h4 class="media-heading"><a href="/#/games/{{game.$id}}">{{game.name}}</a></h4>
+            <p>{{game.description}}</p>
+            <p><small>{{game.created | date:'medium'}}</small></p>
+            <p class="pull-right"><a href=""><span ng-click="removeGame(game.$id)" class="glyphicon glyphicon-trash"></span></a></p>
           </div>
         </li>
       </ul>
@@ -20,4 +22,6 @@
   </div>
 </div>
 
-<p>You have no games.</p>
+<div ng-show="!games.length">
+  <p>You have no games. <a href="/#/games/new">Create your first</a>.</p>
+</div>
