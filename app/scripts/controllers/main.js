@@ -172,7 +172,7 @@ angular.module('planningPokerApp')
             sum += +result.points;
           }
         });
-        avg = sum / $scope.game.estimate.results.length;
+        avg = Math.ceil(sum / $scope.game.estimate.results.length);
       }
       return avg;
     };
