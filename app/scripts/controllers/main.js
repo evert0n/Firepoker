@@ -2,39 +2,39 @@
 
 angular.module('planningPokerApp')
   .controller('MainCtrl', function ($rootScope, $scope, $cookieStore, $location, $routeParams, angularFire) {
-    
+
     // Firebase URL
     var URL = 'https://pzfqrq7kjy.firebaseio.com';
-    
+
     // Load cookies
     $scope.fp = $cookieStore.get('fp');
     if (!$scope.fp) {
       $scope.fp = {};
     }
-    
+
     // UID
     if (!$scope.fp.user || !$scope.fp.user.id) {
       var uid = guid();
       $scope.fp.user = {id: uid};
       $cookieStore.put('fp', $scope.fp);
     }
-    
+
     // GID
     if (!$scope.fp.gid) {
       var gid = guid();
       $scope.fp.gid = gid;
       $cookieStore.put('fp', $scope.fp);
     }
-    
+
     // Initialize Firebase
     var ref = new Firebase(URL);
-    
+
     // Generate a new game
     if ($location.path() === '/games/new' || $location.path() === '/games/new/') {
       var id = guid();
       $location.path('/games/new/' + id);
     }
-    
+
     // Redirect to set full name if empty...
     if (
       $routeParams.gid &&
@@ -43,7 +43,7 @@ angular.module('planningPokerApp')
     ) {
       $location.path('/games/join/' + $routeParams.gid);
     }
-    
+
     // If fullname already set redirect to the game
     if (
       $routeParams.gid &&
@@ -52,7 +52,7 @@ angular.module('planningPokerApp')
     ) {
       $location.path('/games/' + $routeParams.gid);
     }
-    
+
     // Load game & register presence
     if ($routeParams.gid && $location.path() === '/games/' + $routeParams.gid) {
       angularFire(ref.child('/games/' + $routeParams.gid), $scope, 'game');
@@ -68,7 +68,7 @@ angular.module('planningPokerApp')
         }
       });
     }
-    
+
     // Create game
     $scope.createGame = function() {
       var stories = [],
@@ -92,7 +92,7 @@ angular.module('planningPokerApp')
       $cookieStore.put('fp', $scope.fp);
       $location.path('/games/' + $routeParams.gid);
     };
-    
+
     // Create story
     $scope.createStory = function(type) {
       if (type === 'structured') {
@@ -119,7 +119,7 @@ angular.module('planningPokerApp')
       $scope.game.stories.push($scope.newStory);
       $scope.newStory = null;
     };
-    
+
     // Set story
     $scope.setStory = function(index) {
       $scope.game.estimate = $scope.game.stories[index];
@@ -129,7 +129,7 @@ angular.module('planningPokerApp')
       $scope.game.estimate.end = null;
       $scope.showCardDeck = true;
     };
-    
+
     // Estimate story
     $scope.estimate = function(points) {
       if (!$scope.game.estimate.results) {
@@ -137,13 +137,13 @@ angular.module('planningPokerApp')
       }
       $scope.game.estimate.results.push({points:points, user:$scope.fp.user});
     };
-    
+
     // Set full name
     $scope.setFullname = function() {
       $cookieStore.put('fp', $scope.fp);
       $location.path('/games/' + $routeParams.gid);
     };
-    
+
     // Get total of active participants
     $scope.totalOfOnlineParticipants = function() {
       var totalOfOnlineParticipants = 0;
@@ -156,27 +156,27 @@ angular.module('planningPokerApp')
       }
       return totalOfOnlineParticipants;
     };
-    
+
     // Accept
     $scope.accept = function() {
       
     };
-    
+
     // Play again
     $scope.playAgain = function() {
       
     };
-    
+
     // Finish game
     $scope.finishGame = function() {
       
     };
-    
+
     // Re-open game
     $scope.reOpenGame = function() {
       
     };
-    
+
     // Card deck options
     $scope.decks = [
       [0, 1, 2, 4, 8, 16, 32, 64, 128, '?'],
