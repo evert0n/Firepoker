@@ -1,161 +1,235 @@
 'use strict';
 
 angular.module('planningPokerApp')
-  .controller('MainCtrl', function ($rootScope, $scope, $location, $routeParams, angularFireAuth, angularFire, angularFireCollection) {
+  .controller('MainCtrl', function ($rootScope, $scope, $cookieStore, $location, $routeParams, angularFire) {
     
-    // Config
+    // Firebase URL
     var URL = 'https://pzfqrq7kjy.firebaseio.com';
+    
+    // Load cookies
+    $scope.fp = $cookieStore.get('fp');
+    if (!$scope.fp) {
+      $scope.fp = {};
+    }
+    
+    // UID
+    if (!$scope.fp.user || !$scope.fp.user.id) {
+      var uid = guid();
+      $scope.fp.user = {id: uid};
+      $cookieStore.put('fp', $scope.fp);
+    }
+    
+    // GID
+    if (!$scope.fp.gid) {
+      var gid = guid();
+      $scope.fp.gid = gid;
+      $cookieStore.put('fp', $scope.fp);
+    }
     
     // Initialize Firebase
     var ref = new Firebase(URL);
     
-    // Authenticated
-    $scope.authenticated = false;
-    
-    // Settings
-    $scope.settings = {
-      fullname: null,
-      location: null,
-      deck: 'suit1'
-    };
-    
-    // Games
-    $scope.games = angularFireCollection(ref.child('games'));
-    
-    // Game
-    if ($routeParams.gid) {
-      angularFire(ref.child('/games/' + $routeParams.gid), $scope, 'game');
+    // Generate a new game
+    if ($location.path() === '/games/new' || $location.path() === '/games/new/') {
+      var id = guid();
+      $location.path('/games/new/' + id);
     }
     
-    // Initialize FireAuth
-    angularFireAuth.initialize(ref, {scope: $scope, name: 'user'});
+    // Redirect to set full name if empty...
+    if (
+      $routeParams.gid &&
+      $location.path() === '/games/' + $routeParams.gid &&
+      !$scope.fp.user.fullname
+    ) {
+      $location.path('/games/join/' + $routeParams.gid);
+    }
     
-    // Login events
-    $scope.$on("angularFireAuth:login", function(evt, user) {
-      // User logged in.
-      console.log('User logged in');
-      console.log(user, $scope.authenticated);
-      if (user) {
-        $rootScope.user = user;
-        $scope.authenticated = true;
-      }
-      if ($location.path() === '/login') {
-        $location.path('/');
-      }
-    });
+    // If fullname already set redirect to the game
+    if (
+      $routeParams.gid &&
+      $location.path() === '/games/join/' + $routeParams.gid &&
+      $scope.fp.user.fullname
+    ) {
+      $location.path('/games/' + $routeParams.gid);
+    }
     
-    // Logout events
-    $scope.$on("angularFireAuth:logout", function(evt) {
-      // User logged out.
-      console.log('User logged out');
-      $rootScope.user = null;
-      $scope.user = null;
-      if ($scope.authenticated) {
-        $scope.authenticated = false;
-        $location.path('/');
-      }
-    });
-    
-    // Auth error events
-    $scope.$on("angularFireAuth:error", function(evt, err) {
-      // There was an error during authentication.
-      $scope.auth.error = error;
-      console.log(error);
-    });
-    
-    // Fetch user data when autheticated
-    $scope.$watch('authenticated', function() {
-      console.log('is auth:' + $scope.authenticated);
-      if ($scope.authenticated) {
-        // Set settings
-        angularFire(ref.child('/users/' + $scope.user.id), $scope, 'settings');
-      }
-    });
-    
-    // Update settings
-    $scope.saveSettings = function() {
-      console.log('Saving settings');
-      ref.child('/users/' + $scope.user.id).set($scope.settings, function(error) {
-        if (error) {
-          console.log('Data could not be saved.' + error);
-        } else {
-          console.log('Data saved successfully.');
+    // Load game & register presence
+    if ($routeParams.gid && $location.path() === '/games/' + $routeParams.gid) {
+      angularFire(ref.child('/games/' + $routeParams.gid), $scope, 'game');
+      ref.child('/games/' + $routeParams.gid + '/participants/' + $scope.fp.user.id).set($scope.fp.user);
+      var onlineRef = ref.child('/games/' + $routeParams.gid + '/participants/' + $scope.fp.user.id + '/online');
+      var connectedRef = ref.child('/.info/connected');
+      connectedRef.on('value', function(snap) {
+        if (snap.val() === true) {
+          // We're connected (or reconnected)!  Set up our presence state and
+          // tell the server to set a timestamp when we leave.
+          onlineRef.onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
+          onlineRef.set(true);
         }
       });
-    };
+    }
     
     // Create game
     $scope.createGame = function() {
-      console.log('Creating game...');
-      // Convert stories
-      // @todo make it accept structured
       var stories = [],
-          game = angular.copy($scope.game);
-      angular.forEach(game.stories.split('\n'), function(story) {
-        stories.push({name: story});
-      });
-      game.stories = stories;
-      game.status = 'active';
-      game.created = new Date().getTime();
-      $scope.games.add(game, function() {
-        console.log('Created game...');
-        $scope.game = null;
-        $location.path('/games/' + $scope.games[$scope.games.length-1].$id);
-        $scope.$apply();
-      });
+          newGame = angular.copy($scope.newGame);
+      if (newGame.stories) {
+        angular.forEach(newGame.stories.split('\n'), function(title) {
+          var story = {
+            title: title,
+            status: 'queue'
+          };
+          stories.push(story);
+        });
+      }
+      newGame.stories = stories;
+      newGame.status = 'active';
+      newGame.created = new Date().getTime();
+      newGame.owner = $scope.fp.user;
+      newGame.participants = false;
+      newGame.estimate = {draws: false};
+      ref.child('/games/' + $routeParams.gid).set(newGame);
+      $cookieStore.put('fp', $scope.fp);
+      $location.path('/games/' + $routeParams.gid);
     };
     
-    // Update game
-    $scope.updateGame = function(id) {
-      //$scope.games.
+    // Create story
+    $scope.createStory = function(type) {
+      if (type === 'structured') {
+        var title = 'As a/an ' +
+          $scope.newStory.asA +
+          ' I would like to ' +
+          $scope.newStory.iWouldLikeTo +
+          ' so that ' +
+          $scope.newStory.soThat;
+        $scope.newStory.title = title;
+        delete $scope.newStory.asA;
+        delete $scope.newStory.iWouldLikeTo;
+        delete $scope.newStory.soThat;
+      }
+      $scope.newStory.estimates = {};
+      $scope.newStory.estimate = 0;
+      $scope.newStory.status = 'queue';
+      $scope.newStory.estimateStartedAt = null;
+      $scope.newStory.estimateEndedAt = null;
+      $scope.newStory.type = type;
+      if (!$scope.game.stories) {
+        $scope.game.stories = [];
+      }
+      $scope.game.stories.push($scope.newStory);
+      $scope.newStory = null;
     };
     
-    // Remove game
-    $scope.removeGame = function(id) {
-      $scope.games.remove(id, function() {
-        console.log('Removed game: '+ id);
-      });
+    // Set story
+    $scope.setStory = function(index) {
+      $scope.game.estimate = $scope.game.stories[index];
+      $scope.game.estimate.status = 'active';
+      $scope.game.estimate.id = index;
+      $scope.game.estimate.start = new Date().getTime();
+      $scope.game.estimate.end = null;
+      $scope.showCardDeck = true;
     };
     
-    // Login
-    $scope.login = function() {
-      var login = angularFireAuth.login(
-        'password',
-        {
-          email: $scope.user.email,
-          password: $scope.user.password,
-          rememberMe: $scope.user.rememberMe
-        }
-      );
+    // Estimate story
+    $scope.estimate = function(points) {
+      if (!$scope.game.estimate.results) {
+        $scope.game.estimate.results = [];
+      }
+      $scope.game.estimate.results.push({points:points, user:$scope.fp.user});
     };
     
-    // Logout
-    $rootScope.logout = function() {
-      angularFireAuth.logout();
+    // Set full name
+    $scope.setFullname = function() {
+      $cookieStore.put('fp', $scope.fp);
+      $location.path('/games/' + $routeParams.gid);
     };
     
-    // Signup
-    $scope.signup = function() {
-      angularFireAuth.createUser(
-        $scope.user.email,
-        $scope.user.password,
-        function(error, user) {
-          if (error) {
-            $scope.auth.error = error;
+    // Get total of active participants
+    $scope.totalOfOnlineParticipants = function() {
+      var totalOfOnlineParticipants = 0;
+      if ($scope.game && $scope.game.participants) {
+        angular.forEach($scope.game.participants, function(participant) {
+          if (participant.online === true) {
+            totalOfOnlineParticipants++;
           }
-        }
-      );
+        });
+      }
+      return totalOfOnlineParticipants;
     };
     
-    // Delete account
-    $scope.deleteAccount = function() {
+    // Accept
+    $scope.accept = function() {
       
-    }
+    };
+    
+    // Play again
+    $scope.playAgain = function() {
+      
+    };
+    
+    // Finish game
+    $scope.finishGame = function() {
+      
+    };
+    
+    // Re-open game
+    $scope.reOpenGame = function() {
+      
+    };
     
     // Card deck options
-    $scope.card_decks = {
-      suit1: [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'],
-      suit2: [0, 1, 2, 4, 8, 16, 32, 64, 128, '?']
-    };
-    
+    $scope.decks = [
+      [0, 1, 2, 4, 8, 16, 32, 64, 128, '?'],
+      [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?']
+    ];
+    // Default card deck
+    $scope.newGame = {deck: 0};
+
+    // Update game
+    $scope.$watch('game', function(game) {
+      // Defaults
+      $scope.showCardDeck = true;
+      $scope.showSelectEstimate = false;
+      $scope.showAddStory = false;
+      $scope.showFinishGame = false;
+      if (!game) {
+        return;
+      }
+      // Set card deck visibility
+      if (game.estimate && game.estimate.results) {
+        angular.forEach(game.estimate.results, function(result) {
+          if (
+            result &&
+            result.user &&
+            result.user.id &&
+            result.user.id === $scope.fp.user.id
+          ) {
+            $scope.showCardDeck = false;
+          }
+        });
+      }
+      // Set estimation form visibility
+      if (
+        game.estimate &&
+        game.estimate.results &&
+        game.owner &&
+        game.owner.id === $scope.fp.user.id
+      ) {
+        $scope.showSelectEstimate = true;
+      }
+      // Set add story form visibility
+      // Set finish game button visibility
+      if (game.owner && game.owner.id === $scope.fp.user.id) {
+        $scope.showAddStory = true;
+        $scope.showFinishGame = true;
+      }
+    });
   });
+
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+}
+
+function guid() {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}

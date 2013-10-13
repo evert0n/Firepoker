@@ -1,124 +1,132 @@
 
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-9">
     <!-- Game -->
     <h4>{{game.description}}</h4>
-    <p>
-    <!-- Story -->
-    <div class="bordered">
-      <h5>As a/an user I would like to see so that my games</h5>
-      <p>Story description</p>
-    </div>
-    <div class="bordered">
-      <p class="pull-right">Estimate: <span class="label label-danger">12</span></p>
-      <h5>As a/an user I would like to see so that my games</h5>
-      <p>Story description</p>
+    
+    <!-- Estimated stories -->
+    <div ng-repeat="story in game.stories" class="stories">
+      <div ng-show="story.status == 'closed'" class="bordered">
+        <p class="pull-right">Estimate: <span class="label label-danger">{{story.estimate || 0}}</span></p>
+        <h5>{{story.title}}</h5>
+        <p>{{story.description}}</p>
+      </div>
     </div>
     
-    <!-- Estimate results -->
-    <div class="well">
-      <ul class="list-inline">
-        <li><a class="btn btn-default" href="#">1</a></li>
-        <li><a class="btn btn-default" href="#">2</a></li>
-        <li><a class="btn btn-default" href="#">3</a></li>
-      </ul>
+    <!-- Estimate story -->
+    <div ng-show="game.estimate">
+      <!-- Story -->
+      <div class="bordered">
+        <p class="pull-right"><span class="label label-success">CURRENT</span></p>
+        <h5>{{game.estimate.title}}</h5>
+        <p>{{game.estimate.description}}</p>
+      </div>
+      <!-- Estimates -->
+      <div class="well">
+        <div ng-hide="game.estimate.results">
+          <p class="text-center text-muted">Select your estimate</p>
+        </div>
+        <div ng-show="game.estimate.results">
+          <ul class="list-inline">
+            <li ng-repeat="result in game.estimate.results">
+              <div class="card text-center" href="#">{{result.points}}</div>
+              <p class="text-center">{{result.user.fullname}}</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- Card deck -->
+      <div ng-show="game.estimate.status == 'active' && showCardDeck" class="well">
+        <ul class="list-inline">
+          <li ng-repeat="card in decks[game.deck]"><a class="btn btn-default" href="" ng-click="estimate(card)">{{card}}</a></li>
+        </ul>
+      </div>
     </div>
     
-    <!-- Select a card -->
-    <div class="well">
+    <!-- Select an estimate -->
+    <div ng-show="showSelectEstimate" class="well">
       <form class="form-inline" role="form">
         <span class="pull-left">Estimate</span>
         <div class="form-group col-md-2">
           <label class="sr-only" for="exampleInputEmail2">Estimate</label>
           <input type="number" class="form-control input-small" id="exampleInputEmail2" value="3">
         </div>
-        <button type="submit" class="btn btn-success">Accept</button> or 
+        <button type="submit" class="btn btn-success">Accept</button>
         <button type="submit" class="btn btn-primary">Play again</button>
+        <button type="submit" class="btn btn-warning">Finish game</button>
       </form>
     </div>
     
-    <!-- Card deck options -->
-    <div class="well">
-      <ul class="list-inline">
-        <li><a class="btn btn-default" href="#">1</a></li>
-        <li><a class="btn btn-default" href="#">2</a></li>
-        <li><a class="btn btn-default" href="#">3</a></li>
-      </ul>
-    </div>
-    
     <!-- Create story -->
-    <ul class="nav nav-tabs">
-      <li><a href="#free-form" data-toggle="tab" >Free-form</a></li>
-      <li class="active"><a href="#structured" data-toggle="tab">Structured</a></li>
-      <li><a href="#story-list" data-toggle="tab">Story list</a>
-    </ul>
-    <div class="tab-content">
-      <div class="tab-pane" id="free-form">
-        <form role="form" ng-submit="addFreeFormStory()">
-          <div class="form-group">
-            <label for="free-form-story">Story</label>
-            <textarea ng-model="freeForm.story" class="form-control" id="free-form-story" rows="10" placeholder="Enter story"></textarea>
-            <p class="help-block">Type or copy and paste your story as free-form text.</p>
-          </div>
-          <button type="submit" class="btn btn-success">Add story</button>
-           or <a href="#">Cancel</a>
-        </form>
-      </div>
-      <div class="tab-pane active" id="structured">
-        <form role="form">
-          <div class="form-group">
-            <label for="exampleInputEmail1">As a/an...</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputEmail1">I would like to...</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputEmail1">So that...</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputEmail1">Notes</label>
-            <textarea class="form-control" id="exampleInputEmail1" placeholder=""></textarea>
-          </div>
-          <button type="submit" class="btn btn-success">Add story</button>
-           or <a href="#">Cancel</a>
-        </form>
-      </div>
-      <div class="tab-pane" id="story-list">
-        <div ng-show="game.stories">
-          <p>Select a story to estimate</p>
-          <ol ng-show="game.stories">
-            <li ng-repeat="story in game.stories"><a href="" ng-click="estimate(story)">{{story.name}}</a></li>
-          </ol>
+    <div ng-show="showAddStory">
+      <ul class="nav nav-tabs">
+        <li><a href="#free-form" data-toggle="tab" >Free-form</a></li>
+        <li class="active"><a href="#structured" data-toggle="tab">Structured</a></li>
+        <li><a href="#story-list" data-toggle="tab">Story list</a>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane" id="free-form">
+          <form role="form" ng-submit="createStory('free-form')">
+            <div class="form-group">
+              <label for="free-form-story-title">Story</label>
+              <textarea ng-model="newStory.title" class="form-control" id="free-form-story-title" rows="3" placeholder="Enter story"></textarea>
+              <p class="help-block">Type or copy and paste your story as free-form text.</p>
+            </div>
+            <div class="form-group">
+              <label for="free-form-story-notes">Notes</label>
+              <textarea ng-model="newStory.notes" class="form-control" id="free-form-story-notes" rows="3" placeholder="Enter notes"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">Add story</button>
+             or <a href="#">Cancel</a>
+          </form>
         </div>
-        <div ng-hide="game.stories">
-          <p ng-hide="game.stories">You have no stories.</p>
+        <div class="tab-pane active" id="structured">
+          <form role="form" ng-submit="createStory('structured')">
+            <div class="form-group">
+              <label for="structured-story-as-a-an">As a/an...</label>
+              <input ng-model="newStory.asA" type="text" class="form-control" id="structured-story-as-a-an" placeholder="">
+            </div>
+            <div class="form-group">
+              <label for="structured-story-i-would-like-to">I would like to...</label>
+              <input ng-model="newStory.iWouldLikeTo" type="text" class="form-control" id="structured-story-i-would-like-to" placeholder="">
+            </div>
+            <div class="form-group">
+              <label for="structured-story-so-that">So that...</label>
+              <input ng-model="newStory.soThat" type="text" class="form-control" id="structured-story-so-that" placeholder="">
+            </div>
+            <div class="form-group">
+              <label for="structured-story-notes">Notes</label>
+              <textarea ng-model="newStory.notes" class="form-control" id="structured-story-notes" rows="3" placeholder="Enter notes"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">Add story</button>
+             or <a href="#">Cancel</a>
+          </form>
+        </div>
+        <div class="tab-pane" id="story-list">
+          <div ng-show="game.stories">
+            <p>Select a story to estimate</p>
+            <ol ng-show="game.stories">
+              <li ng-repeat="story in game.stories" ng-show="story.status == 'queue'">
+                <a href="" ng-click="setStory($index)">{{story.title}}</a>
+              </li>
+            </ol>
+          </div>
+          <div ng-hide="game.stories">
+            <p>You have no stories.</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-3">
     <div class="affix">
-      <div>
-        <h5>Estimator access</h5>
-        <p><code>http://firepoker.aws.com/zt69nt</code></p>
-        <p>Estimators can join the game at the above URL.</p>
-        <!-- <p><a href="#" class="btn btn-info btn-xs">Send it by email</a></p> -->
-      </div>
-      <div ng-show="authenticated">
-        <hr>
-        <h5>Done playing?</h5>
-        <p><a href="#" class="btn btn-success btn-xs">Complete game</a></p>
-        <p class="text-muted"><small>You can export all estimates as HTML or CSV after you have completed the game.</small></p>
-      </div>
-      <div>
-        <hr>
-        <h5>Participants</h5>
+      <div ng-show="totalOfOnlineParticipants() > 0">
+        <h5>Participants ({{totalOfOnlineParticipants()}})</h5>
         <ul class="list-unstyled">
-          <li>Everton Yoshitani (moderator)</li>
-          <li>User1</li>
+          <li ng-repeat="participant in game.participants" ng-show="participant.online == true">
+            {{participant.fullname}} 
+            <span ng-show="participant.id == game.owner.id">(moderator)</span>
+          </li>
         </ul>
       </div>
     </div>

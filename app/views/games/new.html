@@ -5,19 +5,30 @@
     <p>You can start inviting estimators after you have created the game.</p>
     <form role="form" ng-submit="createGame()">
       <div class="form-group">
+        <label for="fullname">Full name</label>
+        <input ng-model="fp.user.fullname" type="text" class="form-control" id="fullname" placeholder="Enter your name">
+      </div>
+      <div class="form-group">
         <label for="name">Name</label>
-        <input ng-model="game.name" type="text" class="form-control" id="name" placeholder="Enter game name">
+        <input ng-model="newGame.name" type="text" class="form-control" id="name" placeholder="Enter game name">
         <p class="help-block">For example: 'FooBar development project', 'CMS rewrite', or 'Legacy DB migration'</p>
       </div>
       <div class="form-group">
         <label for="description">Description (optional)</label>
-        <input ng-model="game.description" type="text" class="form-control" id="description" placeholder="Enter game description">
+        <input ng-model="newGame.description" type="text" class="form-control" id="description" placeholder="Enter game description">
       </div>
       <h3>Import</h3>
       <div class="form-group">
         <label for="stories">Stories (optional, one per line, maximum of 50 rows)</label>
-        <textarea ng-model="game.stories" rows="10" class="form-control" id="stories" placeholder="Enter stories"></textarea>
+        <textarea ng-model="newGame.stories" rows="10" class="form-control" id="stories" placeholder="Enter stories"></textarea>
         <p class="help-block">Copy and paste from a spreadsheet to import stories into your game. <!-- Make sure the first row contains field names. --></p>
+      </div>
+      <div class="form-group">
+        <label for="deck">Choose the set of estimate cards you want to use.</label>
+        <select class="form-control" id="deck" ng-model="newGame.deck">
+          <option value="0">0, 1, 2, 4, 8, 16, 32, 64, 128, and ?</option>
+          <option value="1">0, ½, 1, 2, 3, 5, 8, 13, 20, 40, 100, and ?</option>
+        </select>
       </div>
       <button type="submit" class="btn btn-success">Create game</button>
        or <a href="#">Cancel</a>

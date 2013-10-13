@@ -1,13 +1,13 @@
 'use strict';
 
-angular.module('planningPokerApp', ['firebase'])
+angular.module('planningPokerApp', ['firebase', 'ngCookies'])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/games/index.html',
         controller: 'MainCtrl'
       })
-      .when('/games/new', {
+      .when('/games/new/:gid', {
         templateUrl: 'views/games/new.html',
         controller: 'MainCtrl'
       })
@@ -15,15 +15,12 @@ angular.module('planningPokerApp', ['firebase'])
         templateUrl: 'views/games/view.html',
         controller: 'MainCtrl'
       })
-      .when('/login', {
-        templateUrl: 'views/account/login.html',
-        controller: 'MainCtrl'
-      })
-      .when('/settings', {
-        templateUrl: 'views/account/settings.html',
+      .when('/games/join/:gid', {
+        templateUrl: 'views/games/join.html',
         controller: 'MainCtrl'
       })
       .otherwise({
         redirectTo: '/'
       });
   });
+

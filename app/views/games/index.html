@@ -1,27 +1,3 @@
-<h1>Games</h1>
-
-<div ng-show="games.length" class="row">
-  <div class="col-md-8">
-    <p>&nbsp;</p>
-    <div ng-repeat="game in games" class="bordered">
-      <ul class="media-list">
-        <li class="media">
-          <div class="media-body">
-            <h4 class="media-heading"><a href="/#/games/{{game.$id}}">{{game.name}}</a></h4>
-            <p>{{game.description}}</p>
-            <p><small>{{game.created | date:'medium'}}</small></p>
-            <p class="pull-right"><a href=""><span ng-click="removeGame(game.$id)" class="glyphicon glyphicon-trash"></span></a></p>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <p>Import from CSV or create stories.</p>
-    <a href="/#/games/new">Create new game</a>
-  </div>
-</div>
-
 <div ng-show="!games.length">
-  <p>You have no games. <a href="/#/games/new">Create your first</a>.</p>
+  <p class="text-center"><a href="/#/games/new" class="btn btn-success ">Create a game</a></p>
 </div>

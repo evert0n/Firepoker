@@ -30,3 +30,18 @@ body {
   box-shadow: none;
 }
 
+.card {
+  width: 90px;
+  height: 110px;
+  color: #333;
+  background-color: #fff;
+  border-color: #adadad;
+  font-size:200%;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: bottom;
+  border: 1px solid;
+  border-radius: 4px;
+  padding-top:30px;
+  margin:10px;
+}
