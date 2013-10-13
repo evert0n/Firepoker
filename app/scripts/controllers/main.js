@@ -95,7 +95,7 @@ angular.module('planningPokerApp')
       newGame.created = new Date().getTime();
       newGame.owner = $scope.fp.user;
       newGame.participants = false;
-      newGame.estimate = {draws: false};
+      newGame.estimate = false;
       ref.child('/games/' + $routeParams.gid).set(newGame);
       $cookieStore.put('fp', $scope.fp);
       $location.path('/games/' + $routeParams.gid);

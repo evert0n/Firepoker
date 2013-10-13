@@ -1,6 +1,6 @@
 
 <div class="row">
-  <div class="col-md-9">
+  <div class="col-md-8">
     
     <!-- Game -->
     <h4>{{game.description}}</h4>
@@ -56,6 +56,12 @@
       </div>
     </div>
     
+    <!-- Show info message if no active story -->
+    <div ng-show="!game.estimate" class="alert alert-info">
+      <span class="glyphicon glyphicon-exclamation-sign"></span>
+      <strong>Hi there!</strong> Wait for moderator place a new hand.
+    </div>
+    
     <!-- Create story -->
     <div ng-show="showAddStory">
       <ul class="nav nav-tabs">
@@ -103,7 +109,6 @@
         </div>
         <div class="tab-pane" id="story-list">
           <div ng-show="game.stories">
-            <p>Select a story to estimate</p>
             <ol ng-show="game.stories">
               <li ng-repeat="story in game.stories" ng-show="story.status == 'queue'">
                 <a href="" ng-click="setStory($index)">{{story.title}}</a>
@@ -117,8 +122,8 @@
       </div>
     </div>
   </div>
-  <div class="col-md-3">
-    <div class="affix">
+  <div class="col-md-4">
+    <div data-spy="affix">
       <div ng-show="totalOfOnlineParticipants() > 0">
         <h5>Participants ({{totalOfOnlineParticipants()}})</h5>
         <ul class="list-unstyled">
@@ -127,6 +132,10 @@
             <span ng-show="participant.id == game.owner.id">(moderator)</span>
           </li>
         </ul>
+      </div>
+      <div class="vspace">
+        <h5>Share this game</h5>
+        <p>Copy the address in your browser and share with team members.</p>
       </div>
     </div>
   </div>
