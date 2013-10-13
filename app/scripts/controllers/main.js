@@ -1,5 +1,13 @@
 'use strict';
 
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+}
+
+function guid() {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}
+
 angular.module('planningPokerApp')
   .controller('MainCtrl', function ($rootScope, $scope, $cookieStore, $location, $routeParams, angularFire) {
 
@@ -107,27 +115,37 @@ angular.module('planningPokerApp')
         delete $scope.newStory.iWouldLikeTo;
         delete $scope.newStory.soThat;
       }
-      $scope.newStory.estimates = {};
-      $scope.newStory.estimate = 0;
+      $scope.newStory.results = false;
+      $scope.newStory.points = 0;
       $scope.newStory.status = 'queue';
-      $scope.newStory.estimateStartedAt = null;
-      $scope.newStory.estimateEndedAt = null;
-      $scope.newStory.type = type;
+      $scope.newStory.startedAt = false;
+      $scope.newStory.endedAt = false;
       if (!$scope.game.stories) {
         $scope.game.stories = [];
       }
       $scope.game.stories.push($scope.newStory);
       $scope.newStory = null;
+      // Set this story if there is none active
+      // maybe this is good thing todo only if the queue is empty
+      if (!$scope.game.estimate) {
+        $scope.setStory($scope.game.stories.length - 1);
+      }
     };
 
     // Set story
     $scope.setStory = function(index) {
+      // If there is a story in the estimate currently reset it
+      if ($scope.game.estimate) {
+        var idx = $scope.game.estimate.id;
+        $scope.game.stories[idx].startedAt = false;
+        $scope.game.stories[idx].endedAt = false;
+        $scope.game.stories[idx].status = 'queue';
+      }
       $scope.game.estimate = $scope.game.stories[index];
       $scope.game.estimate.status = 'active';
       $scope.game.estimate.id = index;
-      $scope.game.estimate.start = new Date().getTime();
-      $scope.game.estimate.end = null;
-      $scope.showCardDeck = true;
+      $scope.game.estimate.startedAt = new Date().getTime();
+      $scope.game.estimate.endedAt = false;
     };
 
     // Estimate story
@@ -144,6 +162,21 @@ angular.module('planningPokerApp')
       $location.path('/games/' + $routeParams.gid);
     };
 
+    // Get estimate results average
+    $scope.getResultsAverage = function() {
+      var avg = 0;
+      if ($scope.game.estimate.results) {
+        var sum = 0;
+        angular.forEach($scope.game.estimate.results, function(result) {
+          if (result.points && angular.isNumber(result.points)) {
+            sum += +result.points;
+          }
+        });
+        avg = sum / $scope.game.estimate.results.length;
+      }
+      return avg;
+    };
+    
     // Get total of active participants
     $scope.totalOfOnlineParticipants = function() {
       var totalOfOnlineParticipants = 0;
@@ -159,22 +192,16 @@ angular.module('planningPokerApp')
 
     // Accept
     $scope.accept = function() {
-      
+      $scope.game.estimate.points = $scope.newEstimate.points;
+      $scope.game.estimate.endedAt = new Date().getTime();
+      $scope.game.estimate.status = 'closed';
+      $scope.game.stories[$scope.game.estimate.id] = angular.copy($scope.game.estimate);
+      $scope.game.estimate = false;
     };
 
     // Play again
     $scope.playAgain = function() {
-      
-    };
-
-    // Finish game
-    $scope.finishGame = function() {
-      
-    };
-
-    // Re-open game
-    $scope.reOpenGame = function() {
-      
+      $scope.game.estimate.results = [];
     };
 
     // Card deck options
@@ -182,6 +209,7 @@ angular.module('planningPokerApp')
       [0, 1, 2, 4, 8, 16, 32, 64, 128, '?'],
       [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?']
     ];
+
     // Default card deck
     $scope.newGame = {deck: 0};
 
@@ -217,6 +245,8 @@ angular.module('planningPokerApp')
       ) {
         $scope.showSelectEstimate = true;
       }
+      // Set new estimate average points
+      $scope.newEstimate = { points: $scope.getResultsAverage() };
       // Set add story form visibility
       // Set finish game button visibility
       if (game.owner && game.owner.id === $scope.fp.user.id) {
@@ -226,10 +256,3 @@ angular.module('planningPokerApp')
     });
   });
 
-function s4() {
-  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-}
-
-function guid() {
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-}

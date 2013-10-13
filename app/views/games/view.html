@@ -1,13 +1,14 @@
 
 <div class="row">
   <div class="col-md-9">
+    
     <!-- Game -->
     <h4>{{game.description}}</h4>
     
     <!-- Estimated stories -->
     <div ng-repeat="story in game.stories" class="stories">
       <div ng-show="story.status == 'closed'" class="bordered">
-        <p class="pull-right">Estimate: <span class="label label-danger">{{story.estimate || 0}}</span></p>
+        <p class="pull-right">Estimated: <span class="label label-danger">{{story.points || 0}}</span></p>
         <h5>{{story.title}}</h5>
         <p>{{story.description}}</p>
       </div>
@@ -41,20 +42,18 @@
           <li ng-repeat="card in decks[game.deck]"><a class="btn btn-default" href="" ng-click="estimate(card)">{{card}}</a></li>
         </ul>
       </div>
-    </div>
-    
-    <!-- Select an estimate -->
-    <div ng-show="showSelectEstimate" class="well">
-      <form class="form-inline" role="form">
-        <span class="pull-left">Estimate</span>
-        <div class="form-group col-md-2">
-          <label class="sr-only" for="exampleInputEmail2">Estimate</label>
-          <input type="number" class="form-control input-small" id="exampleInputEmail2" value="3">
-        </div>
-        <button type="submit" class="btn btn-success">Accept</button>
-        <button type="submit" class="btn btn-primary">Play again</button>
-        <button type="submit" class="btn btn-warning">Finish game</button>
-      </form>
+      <!-- Select an estimate -->
+      <div ng-show="showSelectEstimate" class="well">
+        <form class="form-inline" role="form">
+          <span class="pull-left">Estimate</span>
+          <div class="form-group col-md-2">
+            <label class="sr-only" for="estimate-points">Estimate</label>
+            <input ng-model="newEstimate.points" type="number" class="form-control input-small" id="estimate-points">
+          </div>
+          <button type="submit" class="btn btn-success" ng-click="accept()">Accept</button>
+          <button type="submit" class="btn btn-primary" ng-click="playAgain()">Play again</button>
+        </form>
+      </div>
     </div>
     
     <!-- Create story -->
@@ -69,12 +68,12 @@
           <form role="form" ng-submit="createStory('free-form')">
             <div class="form-group">
               <label for="free-form-story-title">Story</label>
-              <textarea ng-model="newStory.title" class="form-control" id="free-form-story-title" rows="3" placeholder="Enter story"></textarea>
+              <textarea ng-model="newStory.title" class="form-control" id="free-form-story-title" rows="3"></textarea>
               <p class="help-block">Type or copy and paste your story as free-form text.</p>
             </div>
             <div class="form-group">
               <label for="free-form-story-notes">Notes</label>
-              <textarea ng-model="newStory.notes" class="form-control" id="free-form-story-notes" rows="3" placeholder="Enter notes"></textarea>
+              <textarea ng-model="newStory.notes" class="form-control" id="free-form-story-notes" rows="3"></textarea>
             </div>
             <button type="submit" class="btn btn-success">Add story</button>
              or <a href="#">Cancel</a>
@@ -84,19 +83,19 @@
           <form role="form" ng-submit="createStory('structured')">
             <div class="form-group">
               <label for="structured-story-as-a-an">As a/an...</label>
-              <input ng-model="newStory.asA" type="text" class="form-control" id="structured-story-as-a-an" placeholder="">
+              <input ng-model="newStory.asA" type="text" class="form-control" id="structured-story-as-a-an">
             </div>
             <div class="form-group">
               <label for="structured-story-i-would-like-to">I would like to...</label>
-              <input ng-model="newStory.iWouldLikeTo" type="text" class="form-control" id="structured-story-i-would-like-to" placeholder="">
+              <input ng-model="newStory.iWouldLikeTo" type="text" class="form-control" id="structured-story-i-would-like-to">
             </div>
             <div class="form-group">
               <label for="structured-story-so-that">So that...</label>
-              <input ng-model="newStory.soThat" type="text" class="form-control" id="structured-story-so-that" placeholder="">
+              <input ng-model="newStory.soThat" type="text" class="form-control" id="structured-story-so-that">
             </div>
             <div class="form-group">
               <label for="structured-story-notes">Notes</label>
-              <textarea ng-model="newStory.notes" class="form-control" id="structured-story-notes" rows="3" placeholder="Enter notes"></textarea>
+              <textarea ng-model="newStory.notes" class="form-control" id="structured-story-notes" rows="3"></textarea>
             </div>
             <button type="submit" class="btn btn-success">Add story</button>
              or <a href="#">Cancel</a>
