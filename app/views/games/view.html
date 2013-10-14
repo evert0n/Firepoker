@@ -30,14 +30,15 @@
         <div ng-show="game.estimate.results">
           <ul class="list-inline">
             <li ng-repeat="result in game.estimate.results">
-              <div class="card text-center" href="#">{{result.points}}</div>
+              <div ng-show="showCards" class="card text-center" href="#">{{result.points}}</div>
+              <div ng-hide="showCards" class="card"><img ng-src="images/nc1.gif" width="90px"></div>
               <p class="text-center">{{result.user.fullname}}</p>
             </li>
           </ul>
         </div>
       </div>
       <!-- Card deck -->
-      <div ng-show="game.estimate.status == 'active' && showCardDeck" class="well">
+      <div ng-show="showCardDeck" class="well">
         <ul class="list-inline">
           <li ng-repeat="card in decks[game.deck]"><a class="btn btn-default" href="" ng-click="estimate(card)">{{card}}</a></li>
         </ul>
@@ -45,13 +46,13 @@
       <!-- Select an estimate -->
       <div ng-show="showSelectEstimate" class="well">
         <form class="form-inline" role="form">
-          <span class="pull-left">Estimate</span>
           <div class="form-group col-md-2">
             <label class="sr-only" for="estimate-points">Estimate</label>
             <input ng-model="newEstimate.points" type="number" class="form-control input-small" id="estimate-points">
           </div>
           <button type="submit" class="btn btn-success" ng-click="acceptRound()">Accept round</button>
           <button type="submit" class="btn btn-primary" ng-click="playAgain()" ng-disabled="disablePlayAgainButton">Play again</button>
+          <button type="submit" class="btn btn-primary" ng-click="revealCards()">Reveal cards</button>
           <button type="submit" class="btn btn-primary" ng-click="resetRound()">Reset round</button>
         </form>
       </div>
@@ -61,7 +62,7 @@
     <div ng-show="!game.estimate" class="alert alert-info">
       <span class="glyphicon glyphicon-exclamation-sign"></span>
       <strong>Hi {{fp.user.fullname}}!</strong> 
-      <span ng-hide="isOwner">Wait for moderator start a new round.</span>
+      <span ng-hide="isOwner">Wait new round start.</span>
       <span ng-show="isOwner">Add or select a story to start a new round.</span>
     </div>
     

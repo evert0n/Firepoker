@@ -209,6 +209,11 @@ angular.module('planningPokerApp')
       }
     };
     
+    // Reveal cards
+    $scope.revealCards = function() {
+      $scope.showCards = true;
+    };
+    
     // Card deck options
     $scope.decks = [
       [0, 1, 2, 4, 8, 16, 32, 64, 128, '?'],
@@ -227,6 +232,7 @@ angular.module('planningPokerApp')
       $scope.showFinishGame = false;
       $scope.isOwner = false;
       $scope.disablePlayAgainButton = false;
+      $scope.showCards = false;
       if (!game) {
         return;
       }
@@ -267,6 +273,15 @@ angular.module('planningPokerApp')
       // Disable play again button if results are empty
       if (!game.estimate.results) {
         $scope.disablePlayAgainButton = true;
+      }
+      // Show cards? 
+      if (
+        game.estimate &&
+        game.estimate.results &&
+        game.estimate.results.length &&
+        game.estimate.results.length === $scope.totalOfOnlineParticipants()
+      ) {
+        $scope.showCards = true;
       }
     });
   });
