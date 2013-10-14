@@ -134,13 +134,7 @@ angular.module('planningPokerApp')
 
     // Set story
     $scope.setStory = function(index) {
-      // If there is a story in the estimate currently reset it
-      if ($scope.game.estimate) {
-        var idx = $scope.game.estimate.id;
-        $scope.game.stories[idx].startedAt = false;
-        $scope.game.stories[idx].endedAt = false;
-        $scope.game.stories[idx].status = 'queue';
-      }
+      $scope.resetRound();
       $scope.game.estimate = $scope.game.stories[index];
       $scope.game.estimate.status = 'active';
       $scope.game.estimate.id = index;
@@ -191,7 +185,7 @@ angular.module('planningPokerApp')
     };
 
     // Accept
-    $scope.accept = function() {
+    $scope.acceptRound = function() {
       $scope.game.estimate.points = $scope.newEstimate.points;
       $scope.game.estimate.endedAt = new Date().getTime();
       $scope.game.estimate.status = 'closed';
@@ -204,6 +198,17 @@ angular.module('planningPokerApp')
       $scope.game.estimate.results = [];
     };
 
+    // Reset round
+    $scope.resetRound = function() {
+      if ($scope.game.estimate) {
+        var idx = $scope.game.estimate.id;
+        $scope.game.stories[idx].startedAt = false;
+        $scope.game.stories[idx].endedAt = false;
+        $scope.game.stories[idx].status = 'queue';
+        $scope.game.estimate = false;
+      }
+    };
+    
     // Card deck options
     $scope.decks = [
       [0, 1, 2, 4, 8, 16, 32, 64, 128, '?'],
@@ -220,8 +225,14 @@ angular.module('planningPokerApp')
       $scope.showSelectEstimate = false;
       $scope.showAddStory = false;
       $scope.showFinishGame = false;
+      $scope.isOwner = false;
+      $scope.disablePlayAgainButton = false;
       if (!game) {
         return;
+      }
+      // Is current participant the game owner?
+      if (game.owner && game.owner.id && game.owner.id === $scope.fp.user.id) {
+        $scope.isOwner = true;
       }
       // Set card deck visibility
       if (game.estimate && game.estimate.results) {
@@ -239,7 +250,7 @@ angular.module('planningPokerApp')
       // Set estimation form visibility
       if (
         game.estimate &&
-        game.estimate.results &&
+        // game.estimate.results &&
         game.owner &&
         game.owner.id === $scope.fp.user.id
       ) {
@@ -252,6 +263,10 @@ angular.module('planningPokerApp')
       if (game.owner && game.owner.id === $scope.fp.user.id) {
         $scope.showAddStory = true;
         $scope.showFinishGame = true;
+      }
+      // Disable play again button if results are empty
+      if (!game.estimate.results) {
+        $scope.disablePlayAgainButton = true;
       }
     });
   });

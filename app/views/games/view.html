@@ -1,5 +1,5 @@
 
-<div class="row">
+<div class="row" ng-show="game">
   <div class="col-md-8">
     
     <!-- Game -->
@@ -50,8 +50,9 @@
             <label class="sr-only" for="estimate-points">Estimate</label>
             <input ng-model="newEstimate.points" type="number" class="form-control input-small" id="estimate-points">
           </div>
-          <button type="submit" class="btn btn-success" ng-click="accept()">Accept</button>
-          <button type="submit" class="btn btn-primary" ng-click="playAgain()">Play again</button>
+          <button type="submit" class="btn btn-success" ng-click="acceptRound()">Accept round</button>
+          <button type="submit" class="btn btn-primary" ng-click="playAgain()" ng-disabled="disablePlayAgainButton">Play again</button>
+          <button type="submit" class="btn btn-primary" ng-click="resetRound()">Reset round</button>
         </form>
       </div>
     </div>
@@ -59,7 +60,9 @@
     <!-- Show info message if no active story -->
     <div ng-show="!game.estimate" class="alert alert-info">
       <span class="glyphicon glyphicon-exclamation-sign"></span>
-      <strong>Hi there!</strong> Wait for moderator place a new hand.
+      <strong>Hi {{fp.user.fullname}}!</strong> 
+      <span ng-hide="isOwner">Wait for moderator start a new round.</span>
+      <span ng-show="isOwner">Add or select a story to start a new round.</span>
     </div>
     
     <!-- Create story -->
@@ -71,39 +74,39 @@
       </ul>
       <div class="tab-content">
         <div class="tab-pane" id="free-form">
-          <form role="form" ng-submit="createStory('free-form')">
+          <form name="formFreeForm" ng-submit="createStory('free-form')">
             <div class="form-group">
               <label for="free-form-story-title">Story</label>
-              <textarea ng-model="newStory.title" class="form-control" id="free-form-story-title" rows="3"></textarea>
+              <textarea ng-model="newStory.title" class="form-control" id="free-form-story-title" rows="3" required></textarea>
               <p class="help-block">Type or copy and paste your story as free-form text.</p>
             </div>
             <div class="form-group">
               <label for="free-form-story-notes">Notes</label>
               <textarea ng-model="newStory.notes" class="form-control" id="free-form-story-notes" rows="3"></textarea>
             </div>
-            <button type="submit" class="btn btn-success">Add story</button>
+            <button type="submit" class="btn btn-success" ng-disabled="formFreeForm.$invalid">Add story</button>
              or <a href="#">Cancel</a>
           </form>
         </div>
         <div class="tab-pane active" id="structured">
-          <form role="form" ng-submit="createStory('structured')">
+          <form name="formStructured" ng-submit="createStory('structured')" novalidate>
             <div class="form-group">
               <label for="structured-story-as-a-an">As a/an...</label>
-              <input ng-model="newStory.asA" type="text" class="form-control" id="structured-story-as-a-an">
+              <input ng-model="newStory.asA" type="text" class="form-control" id="structured-story-as-a-an" required>
             </div>
             <div class="form-group">
               <label for="structured-story-i-would-like-to">I would like to...</label>
-              <input ng-model="newStory.iWouldLikeTo" type="text" class="form-control" id="structured-story-i-would-like-to">
+              <input ng-model="newStory.iWouldLikeTo" type="text" class="form-control" id="structured-story-i-would-like-to" required>
             </div>
             <div class="form-group">
               <label for="structured-story-so-that">So that...</label>
-              <input ng-model="newStory.soThat" type="text" class="form-control" id="structured-story-so-that">
+              <input ng-model="newStory.soThat" type="text" class="form-control" id="structured-story-so-that" required>
             </div>
             <div class="form-group">
               <label for="structured-story-notes">Notes</label>
               <textarea ng-model="newStory.notes" class="form-control" id="structured-story-notes" rows="3"></textarea>
             </div>
-            <button type="submit" class="btn btn-success">Add story</button>
+            <button type="submit" class="btn btn-success" ng-disabled="formStructured.$invalid">Add story</button>
              or <a href="#">Cancel</a>
           </form>
         </div>

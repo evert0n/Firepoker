@@ -3,14 +3,14 @@
   <div class="col-md-6">
     <h1>Create a new game</h1>
     <p>You can start inviting estimators after you have created the game.</p>
-    <form role="form" ng-submit="createGame()">
+    <form name="form" ng-submit="createGame()" novalidate>
       <div class="form-group">
         <label for="fullname">Full name</label>
-        <input ng-model="fp.user.fullname" type="text" class="form-control" id="fullname" placeholder="Enter your name">
+        <input ng-model="fp.user.fullname" type="text" class="form-control" id="fullname" placeholder="Enter your name" required>
       </div>
       <div class="form-group">
         <label for="name">Name</label>
-        <input ng-model="newGame.name" type="text" class="form-control" id="name" placeholder="Enter game name">
+        <input ng-model="newGame.name" type="text" class="form-control" id="name" placeholder="Enter game name" required>
         <p class="help-block">For example: 'FooBar development project', 'CMS rewrite', or 'Legacy DB migration'</p>
       </div>
       <div class="form-group">
@@ -25,12 +25,12 @@
       </div>
       <div class="form-group">
         <label for="deck">Choose the set of estimate cards you want to use.</label>
-        <select class="form-control" id="deck" ng-model="newGame.deck">
+        <select class="form-control" id="deck" ng-model="newGame.deck" required>
           <option value="0">0, 1, 2, 4, 8, 16, 32, 64, 128, and ?</option>
           <option value="1">0, ½, 1, 2, 3, 5, 8, 13, 20, 40, 100, and ?</option>
         </select>
       </div>
-      <button type="submit" class="btn btn-success">Create game</button>
+      <button type="submit" class="btn btn-success" ng-disabled="form.$invalid">Create game</button>
        or <a href="#">Cancel</a>
     </form>
   </div>
