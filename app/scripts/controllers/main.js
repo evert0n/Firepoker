@@ -229,7 +229,6 @@ angular.module('planningPokerApp')
       $scope.showCardDeck = true;
       $scope.showSelectEstimate = false;
       $scope.showAddStory = false;
-      $scope.showFinishGame = false;
       $scope.isOwner = false;
       $scope.disablePlayAgainButton = false;
       $scope.showCards = false;
@@ -265,10 +264,8 @@ angular.module('planningPokerApp')
       // Set new estimate average points
       $scope.newEstimate = { points: $scope.getResultsAverage() };
       // Set add story form visibility
-      // Set finish game button visibility
       if (game.owner && game.owner.id === $scope.fp.user.id) {
         $scope.showAddStory = true;
-        $scope.showFinishGame = true;
       }
       // Disable play again button if results are empty
       if (!game.estimate.results) {
