@@ -3,14 +3,15 @@
   <div class="col-md-8">
     
     <!-- Game -->
-    <h4>{{game.description}}</h4>
+    <h4>{{game.name}}</h4>
+    <p>{{game.description}}</p>
     
     <!-- Estimated stories -->
     <div ng-repeat="story in game.stories" class="stories">
       <div ng-show="story.status == 'closed'" class="bordered">
-        <p class="pull-right">Estimated: <span class="label label-danger">{{story.points || 0}}</span></p>
+        <p class="text-right">Estimated: <span class="label label-danger">{{story.points || 0}}</span></p>
         <h5>{{story.title}}</h5>
-        <p>{{story.description}}</p>
+        <p>{{story.notes}}</p>
       </div>
     </div>
     
@@ -18,9 +19,9 @@
     <div ng-show="game.estimate">
       <!-- Story -->
       <div class="bordered">
-        <p class="pull-right"><span class="label label-success">CURRENT</span></p>
-        <h5>{{game.estimate.title}}</h5>
-        <p>{{game.estimate.description}}</p>
+        <p class="text-right"><span class="label label-success">CURRENT</span></p>
+        <h4>{{game.estimate.title}}</h4>
+        <p>{{game.estimate.notes}}</p>
       </div>
       <!-- Estimates -->
       <div class="well">
@@ -30,8 +31,8 @@
         <div ng-show="game.estimate.results">
           <ul class="list-inline">
             <li ng-repeat="result in game.estimate.results">
-              <div ng-show="showCards" class="card text-center" href="#">{{result.points}}</div>
-              <div ng-hide="showCards" class="card"><img ng-src="images/nc1.gif" width="90px"></div>
+              <div ng-show="showCards || result.user.id == fp.user.id" class="card text-center" href="#">{{result.points}}</div>
+              <div ng-hide="showCards || result.user.id == fp.user.id" class="card card-facedown">&nbsp;</div>
               <p class="text-center">{{result.user.fullname}}</p>
             </li>
           </ul>
@@ -62,7 +63,7 @@
     <div ng-show="!game.estimate" class="alert alert-info">
       <span class="glyphicon glyphicon-exclamation-sign"></span>
       <strong>Hi {{fp.user.fullname}}!</strong> 
-      <span ng-hide="isOwner">Wait new round start.</span>
+      <span ng-hide="isOwner">Wait a new round start.</span>
       <span ng-show="isOwner">Add or select a story to start a new round.</span>
     </div>
     

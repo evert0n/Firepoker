@@ -196,6 +196,7 @@ angular.module('planningPokerApp')
     // Play again
     $scope.playAgain = function() {
       $scope.game.estimate.results = [];
+      $scope.game.estimate.status = 'active';
     };
 
     // Reset round
@@ -211,7 +212,7 @@ angular.module('planningPokerApp')
     
     // Reveal cards
     $scope.revealCards = function() {
-      $scope.showCards = true;
+      $scope.game.estimate.status = 'reveal';
     };
     
     // Card deck options
@@ -272,11 +273,13 @@ angular.module('planningPokerApp')
         $scope.disablePlayAgainButton = true;
       }
       // Show cards? 
-      if (
+      if ($scope.game.estimate.status == 'reveal') {
+        $scope.showCards = true;
+      } else if (
         game.estimate &&
         game.estimate.results &&
         game.estimate.results.length &&
-        game.estimate.results.length === $scope.totalOfOnlineParticipants()
+        game.estimate.results.length >= $scope.totalOfOnlineParticipants()
       ) {
         $scope.showCards = true;
       }

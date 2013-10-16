@@ -31,7 +31,7 @@ body {
 }
 
 .card {
-  width: 90px;
+  width: 80px;
   height: 110px;
   color: #333;
   background-color: #fff;
@@ -46,6 +46,9 @@ body {
   margin:10px;
 }
 
+.card-facedown {
+  background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAANklEQVQYV2NkIAIwEqHmPyFF/4GGMBJSBLYIlyKwCTCnYFOEogCfSSj+QTYJwwR063AqACkEAGnjBgmbf5VOAAAAAElFTkSuQmCC) repeat;
+}  
 .gb-btn {
   margin-top:10px;
 }
