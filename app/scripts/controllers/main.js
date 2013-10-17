@@ -63,7 +63,14 @@ angular.module('planningPokerApp')
 
     // Load game & register presence
     if ($routeParams.gid && $location.path() === '/games/' + $routeParams.gid) {
-      angularFire(ref.child('/games/' + $routeParams.gid), $scope, 'game');
+      angularFire(ref.child('/games/' + $routeParams.gid), $scope, 'game').then(function() {
+        // Is current user the game owner?
+        if ($scope.game.owner && $scope.game.owner.id && $scope.game.owner.id === $scope.fp.user.id) {
+          $scope.isOwner = true;
+        } else {
+          $scope.isOwner = false;
+        }
+      });
       ref.child('/games/' + $routeParams.gid + '/participants/' + $scope.fp.user.id).set($scope.fp.user);
       var onlineRef = ref.child('/games/' + $routeParams.gid + '/participants/' + $scope.fp.user.id + '/online');
       var connectedRef = ref.child('/.info/connected');
@@ -142,6 +149,11 @@ angular.module('planningPokerApp')
       $scope.game.estimate.endedAt = false;
     };
 
+    // Delete story
+    $scope.deleteStory = function(index) {
+      $scope.game.stories.splice(index, 1);
+    };
+
     // Estimate story
     $scope.estimate = function(points) {
       if (!$scope.game.estimate.results) {
@@ -170,7 +182,7 @@ angular.module('planningPokerApp')
       }
       return avg;
     };
-    
+
     // Get total of active participants
     $scope.totalOfOnlineParticipants = function() {
       var totalOfOnlineParticipants = 0;
@@ -209,12 +221,12 @@ angular.module('planningPokerApp')
         $scope.game.estimate = false;
       }
     };
-    
+
     // Reveal cards
     $scope.revealCards = function() {
       $scope.game.estimate.status = 'reveal';
     };
-    
+
     // Card deck options
     $scope.decks = [
       [0, 1, 2, 4, 8, 16, 32, 64, 128, '?'],
@@ -230,15 +242,10 @@ angular.module('planningPokerApp')
       $scope.showCardDeck = true;
       $scope.showSelectEstimate = false;
       $scope.showAddStory = false;
-      $scope.isOwner = false;
-      $scope.disablePlayAgainButton = false;
+      $scope.disablePlayAgainAndRevealButtons = false;
       $scope.showCards = false;
       if (!game) {
         return;
-      }
-      // Is current participant the game owner?
-      if (game.owner && game.owner.id && game.owner.id === $scope.fp.user.id) {
-        $scope.isOwner = true;
       }
       // Set card deck visibility
       if (game.estimate && game.estimate.results) {
@@ -268,9 +275,9 @@ angular.module('planningPokerApp')
       if (game.owner && game.owner.id === $scope.fp.user.id) {
         $scope.showAddStory = true;
       }
-      // Disable play again button if results are empty
-      if (!game.estimate.results) {
-        $scope.disablePlayAgainButton = true;
+      // Disable play again and reveal buttons if results are empty
+      if (!game.estimate.results || game.estimate.results.length === 0) {
+        $scope.disablePlayAgainAndRevealButtons = true;
       }
       // Show cards? 
       if ($scope.game.estimate.status == 'reveal') {
