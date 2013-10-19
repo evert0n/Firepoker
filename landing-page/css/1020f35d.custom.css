@@ -110,4 +110,5 @@ h2.explain{line-height:34px;}
 .about{background: #121210; color: #CBCBCB; padding:80px 0; }
 
 /*FOOTER*/
-.footer{float:right; padding:10px; font-size:24px}
+.footer{float:right; text-align: right; padding:10px; font-size:24px}
+.footer .citations{font-size: 12px;}
