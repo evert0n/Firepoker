@@ -1,0 +1,114 @@
+
+
+/*Custom Styles*/
+
+
+/*EFFECTS*/
+
+.hover { 
+  opacity:.5; 
+  -webkit-transition:all .3s ease-in-out; 
+  -moz-transition:all .3s ease-in-out; 
+  -ms-transition:all .3s ease-in-out; 
+  -o-transition:all .3s ease-in-out; 
+  transition:all .3s ease-in-out; 
+} 
+  
+.entry:hover .hover { opacity:1; } 
+
+/*NAV*/
+
+nav.primary{background:;}
+
+nav.primary ul li a:active, nav.primary ul li a.selected { 
+  background:#000; color:#fff; 
+} 
+
+
+nav.primary li { 
+  float:left; 
+  list-style:none;
+} 
+
+nav.primary ul li a {} 
+
+nav.primary ul li a:active, nav.primary ul li a.selected { background:; text-shadow:none; } 
+
+.page { 
+  float:left; 
+  width:100%; 
+} 
+
+.main { 
+  padding:20px 20px 0; 
+  margin:70px 0 0 0; 
+} 
+  
+
+
+.entry { 
+  position:relative; 
+  float:left; 
+  margin-right:20px; 
+  margin-bottom:20px; 
+  cursor:pointer; 
+  padding:10px; 
+  width:200px; 
+} 
+
+
+nav.primary ul li a { 
+  height:39px; 
+  width:156px; 
+  display:block;
+  font-size:18px; 
+  color:#000; 
+  text-indent:0px; 
+  text-decoration:none; 
+  line-height:39px; 
+} 
+nav.primary ul li a:hover { 
+  color:#999; 
+  background-position:center bottom; 
+  text-shadow:none;
+} 
+
+/*SHARED STYLES*/
+
+.intro{margin: 0 auto 2em; font-weight:100; font-size:200%; line-height:1; color:#6A6A6A; text-align: center;}
+
+
+/*HEADER*/
+
+.header{ padding:0px;}
+
+.callout{background:red; padding:60px 0 0;}
+.section{padding:4.5% 0; border-bottom: 1px solid #CCC;}
+
+.companycallout{ margin-bottom:20px;}
+.companycallout p{text-align: center;}
+.companycallout h1{font-size:10em; line-height:2em; color:#fff; text-align: center;}
+.companycallout h2{font-size:47px;line-height:67px; font-weight:300; text-transform: uppercase;}
+.companycallout h3{color:white; text-align:center;}
+
+/*CALLOUT*/
+.calloutleft h2{ margin-top:0; font: 20px/14px "Open Sans",Helvetica,Arial,Sans-serif; color:#9099A3; margin-bottom:18px;text-transform: uppercase; font-weight:200;}
+.calloutleft h1{font: bold 54px/50px "Open Sans",Helvetica,Arial,Sans-serif;margin-bottom:30px; margin-top:0; text-transform: uppercase;}
+h2.explain{line-height:34px;}
+.actionbtn{background:#DD4A38; color: #ECEEF1!important; text-shadow:none; font-weight:bold; margin-right:20px; padding: 15px 25px;}
+.actionbtn:hover{background:#DD4A38; box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25) inset; -webkit-transition:all .3s linear;}
+
+.explain h2{font-weight:200; max-width: 80%; margin:0 auto; text-align:center; margin-bottom:16px;}
+.contactbtn{background:#712514; color: #ECEEF1!important; text-shadow:none; font-weight:bold; padding: 15px 25px;}
+.contactbtn:hover{background:#96331D; box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25) inset;-webkit-transition:all .3s linear}
+.homecallout{color:#A2A9B4;}
+.homecallout h2{font:bold 18px/40px "Open Sans",Helvetica,Arial,Sans-serif; color:#2E3846;}
+.halfcallout {background-color: rgb(255, 51, 0); height: 280px; margin-top: -200px;}
+
+/*ABOUT*/
+#about{padding-top:80px; margin-top:80px; margin-bottom:80px; padding-bottom:80px;}
+.about{background: #121210; color: #CBCBCB; padding:80px 0; }
+
+/*FOOTER*/
+.footer{float:right; text-align: right; padding:10px; font-size:24px}
+.footer .citations{font-size: 12px;}
