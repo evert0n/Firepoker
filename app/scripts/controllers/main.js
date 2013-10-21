@@ -34,6 +34,9 @@ angular.module('firePokerApp')
       $cookieStore.put('fp', $scope.fp);
     }
 
+		// Show navbar?
+		$rootScope.showNavbar = $location.path() !== '/';
+		
     // Initialize Firebase
     var ref = new Firebase(URL);
 
