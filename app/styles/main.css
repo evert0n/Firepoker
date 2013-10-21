@@ -55,7 +55,7 @@ body {
 }
 
 .vspace {
-  margin-top:20px;
+  margin-top:60px;
 }
 
 span[contenteditable=true] {
@@ -66,3 +66,16 @@ span[contenteditable=true] {
    padding:5px;
 }
 
+.btn-start {
+	font-size: 24px;
+	padding: 14px 24px;
+	background-color:#ff0700;
+}
+
+.btn-start:hover {
+	background-color:#ee0700;
+}
+
+.footer {
+	margin-top:200px;
+}

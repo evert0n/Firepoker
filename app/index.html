@@ -10,8 +10,8 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles/main.css">
-  <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css">
   </head>
   <body ng-app="planningPokerApp" ng-cloak>
     <!--[if lt IE 7]>
@@ -24,7 +24,7 @@
     <![endif]-->
     
     <!-- Fixed navbar -->
-    <div class="navbar navbar-default navbar-fixed-top">
+    <div ng-show="showNavbar" class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -36,7 +36,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li></li>
+            <li>&nbsp;</li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
