@@ -1,7 +1,6 @@
 /* Will be compiled down to a single stylesheet with your sass files */
 
 body {
-  min-height: 2000px;
   padding-top: 70px;
 }
 
