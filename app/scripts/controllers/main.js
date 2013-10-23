@@ -236,17 +236,16 @@ angular.module('firePokerApp')
       [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?']
     ];
 
-    // Default card deck
+    // Defaults
     $scope.newGame = {deck: 0};
+    $scope.showCardDeck = true;
+    $scope.showSelectEstimate = false;
+    $scope.showAddStory = false;
+    $scope.disablePlayAgainAndRevealButtons = false;
+    $scope.showCards = false;
 
     // Update game
     $scope.$watch('game', function(game) {
-      // Defaults
-      $scope.showCardDeck = true;
-      $scope.showSelectEstimate = false;
-      $scope.showAddStory = false;
-      $scope.disablePlayAgainAndRevealButtons = false;
-      $scope.showCards = false;
       if (!game) {
         return;
       }
