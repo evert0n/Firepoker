@@ -245,9 +245,9 @@ angular.module('firePokerApp')
     $scope.showCards = false;
 
     // Set card deck visibility
-    var setShowCardDeck = function() {
-      if (game.estimate && game.estimate.results) {
-        angular.forEach(game.estimate.results, function(result) {
+    $scope.setShowCardDeck = function() {
+      if ($scope.game.estimate && $scope.game.estimate.results) {
+        angular.forEach($scope.game.estimate.results, function(result) {
           if (
             result &&
             result.user &&
@@ -260,42 +260,61 @@ angular.module('firePokerApp')
       }
     };
     
+    // Set estimation form visibility
+    $scope.setShowSelectEstimate = function() {
+      if (
+        $scope.game.estimate &&
+        $scope.game.owner &&
+        $scope.game.owner.id === $scope.fp.user.id
+      ) {
+        $scope.showSelectEstimate = true;
+      }
+    };
+    
+    // Set new estimate average points
+    $scope.setNewEstimate = function() {
+      $scope.newEstimate = { points: $scope.getResultsAverage() };
+    };
+    
+    // Set add story form visibility
+    $scope.setShowAddStory = function() {
+      if ($scope.game.owner && $scope.game.owner.id === $scope.fp.user.id) {
+        $scope.showAddStory = true;
+      }
+    };
+    
+    // Disable play again and reveal buttons if results are empty
+    $scope.setDisablePlayAgainAndRevealButtons = function() {
+      if (!$scope.game.estimate.results || $scope.game.estimate.results.length === 0) {
+        $scope.disablePlayAgainAndRevealButtons = true;
+      }
+    }
+    
+    // Show cards? 
+    $scope.setShowCards = function() {
+      if ($scope.game.estimate.status == 'reveal') {
+        $scope.showCards = true;
+      } else if (
+        $scope.game.estimate &&
+        $scope.game.estimate.results &&
+        $scope.game.estimate.results.length &&
+        $scope.game.estimate.results.length >= $scope.totalOfOnlineParticipants()
+      ) {
+        $scope.showCards = true;
+      }
+    }
+    
     // Update game
     $scope.$watch('game', function(game) {
       if (!game) {
         return;
       }
-      setShowCardDeck();
-      // Set estimation form visibility
-      if (
-        game.estimate &&
-        // game.estimate.results &&
-        game.owner &&
-        game.owner.id === $scope.fp.user.id
-      ) {
-        $scope.showSelectEstimate = true;
-      }
-      // Set new estimate average points
-      $scope.newEstimate = { points: $scope.getResultsAverage() };
-      // Set add story form visibility
-      if (game.owner && game.owner.id === $scope.fp.user.id) {
-        $scope.showAddStory = true;
-      }
-      // Disable play again and reveal buttons if results are empty
-      if (!game.estimate.results || game.estimate.results.length === 0) {
-        $scope.disablePlayAgainAndRevealButtons = true;
-      }
-      // Show cards? 
-      if ($scope.game.estimate.status == 'reveal') {
-        $scope.showCards = true;
-      } else if (
-        game.estimate &&
-        game.estimate.results &&
-        game.estimate.results.length &&
-        game.estimate.results.length >= $scope.totalOfOnlineParticipants()
-      ) {
-        $scope.showCards = true;
-      }
+      $scope.setShowCardDeck();
+      $scope.setShowSelectEstimate();
+      $scope.setNewEstimate();
+      $scope.setShowAddStory();
+      $scope.setDisablePlayAgainAndRevealButtons();
+      $scope.setShowCards();
     });
   });
 
