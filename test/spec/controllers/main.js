@@ -8,6 +8,7 @@ describe('Controller: MainCtrl', function () {
   beforeEach(module('ngCookies'));
 
   var UUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/; 
+
   var MainCtrl,
       scope,
       rootScope,
@@ -41,33 +42,31 @@ describe('Controller: MainCtrl', function () {
     expect(scope.fp.gid).toMatch(UUID);
   });
   
-  // it('should set `showNavBar` to FALSE in the app root (/) path', function() {
-  //   location.path('/');
-  //   expect(rootScope.showNavbar).toEqual(false);
-  // });
+  it('should set `showNavBar` to FALSE in the app root (/) path', function() {
+    // location.path('/');
+    // expect(rootScope.showNavbar).toEqual(false);
+  });
   
-  // it('should set `showNavBar` to TRUE in any location other than the app root (/) path', function() {
-  //   location.path('/games');
-  //   expect(rootScope.showNavbar).toBe(true);
-  // });
+  it('should set `showNavBar` to TRUE in any location other than the app root (/) path', function() {
+    // location.path('/games');
+    // expect(rootScope.showNavbar).toBe(true);
+  });
   
-  // it('should redirect to create a new game with a GID', function() {
-  //   location.path('/games/new');
-  //   console.log(location.path());
-  // });
+  it('should redirect to create a new game with a GID', function() {
+    // location.path('/games/new');
+  });
   
-  // it('should redirect to set fullname if empty', function() {
-  //   
-  // });
+  it('should redirect to set fullname if empty', function() {
+    
+  });
   
-  // it('should load the game and set presence', function() {
-  //   
-  // });
+  it('should load the game and set presence', function() {
+    
+  });
   
-  // it('should create games', function() {
-  //   scope.createGame();
-  //   console.log(scope.game);
-  // });
+  it('should create games', function() {
+    // scope.createGame();
+  });
   
   it('should add structured stories to the game', function() {
     
@@ -77,7 +76,7 @@ describe('Controller: MainCtrl', function () {
     
   });
   
-  it('should set the latest added stories as the active story in the round if none set', function() {
+  it('should set the latest added story as the active story in the round if none set', function() {
     
   });
   
