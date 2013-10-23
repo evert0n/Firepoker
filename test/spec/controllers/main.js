@@ -2,13 +2,12 @@
 
 describe('Controller: MainCtrl', function () {
 
-  // load the controller's module
+  // Load the controller's module
   beforeEach(module('firePokerApp'));
   beforeEach(module('firebase'));
   beforeEach(module('ngCookies'));
 
-  var UUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/; 
-
+  // Initialize objects
   var MainCtrl,
       scope,
       rootScope,
@@ -25,7 +24,88 @@ describe('Controller: MainCtrl', function () {
       $location: location
     });
   }));
+  
+  // Regex match for UUID's
+  var UUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/; 
 
+  // Current valid/available card decks
+  var VALID_CARD_DECKS = [
+    [0, 1, 2, 4, 8, 16, 32, 64, 128, '?'],
+    [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?']
+  ];
+  
+  // Set a test game for tests
+  var setTestGame = function() {
+    scope.game = {
+      "created" : 1382370198911,
+      "participants" : {
+        "558aa568-461f-9bf5-fdc8-c4e5aab51b92" : {
+          "online" : true,
+          "fullname" : "Chrome",
+          "id" : "558aa568-461f-9bf5-fdc8-c4e5aab51b92"
+        },
+        "37b9be39-2598-6e05-0295-33490ef60ad7" : {
+          "online" : true,
+          "fullname" : "Safari",
+          "id" : "37b9be39-2598-6e05-0295-33490ef60ad7"
+        },
+        "eb5c1da2-2cdd-b89f-9369-ea532d1a9b27" : {
+          "online" : true,
+          "fullname" : "Firefox",
+          "id" : "eb5c1da2-2cdd-b89f-9369-ea532d1a9b27"
+        },
+        "257d4b3a-7972-6552-03f0-ad49b6518992" : {
+          "online" : 1382370366666,
+          "fullname" : "Offline Estimator",
+          "id" : "257d4b3a-7972-6552-03f0-ad49b6518992"
+        }
+      },
+      "estimate" : {
+        "results" : [ {
+          "points" : 8,
+          "user" : {
+            "fullname" : "Firefox",
+            "id" : "eb5c1da2-2cdd-b89f-9369-ea532d1a9b27"
+          }
+        }, {
+          "points" : 8,
+          "user" : {
+            "fullname" : "Safari",
+            "id" : "37b9be39-2598-6e05-0295-33490ef60ad7"
+          }
+        }, {
+          "points" : 16,
+          "user" : {
+            "fullname" : "Chrome",
+            "id" : "558aa568-461f-9bf5-fdc8-c4e5aab51b92"
+          }
+        } ],
+        "points" : 0,
+        "title" : "As a/an user I would like to play planning poker with my team so that we can estimate our user stories",
+        "endedAt" : false,
+        "status" : "active",
+        "startedAt" : 1382370236239,
+        "id" : 0
+      },
+      "owner" : {
+        "fullname" : "Chrome",
+        "id" : "558aa568-461f-9bf5-fdc8-c4e5aab51b92"
+      },
+      "stories" : [ {
+        "results" : false,
+        "points" : 0,
+        "title" : "As a/an user I would like to play planning poker with my team so that we can estimate our user stories",
+        "endedAt" : false,
+        "status" : "active",
+        "startedAt" : 1382370236239,
+        "id" : 0
+      } ],
+      "name" : "Demo",
+      "status" : "active",
+      "deck" : 0
+    }
+  };
+  
   // it('should set URL constant with a firebaseIO.com endpoint', function() {
   //   expect(scope.URL).toBe('https://pzfqrq7kjy.firebaseio.com');
   // });
@@ -68,11 +148,11 @@ describe('Controller: MainCtrl', function () {
     // scope.createGame();
   });
   
-  it('should add structured stories to the game', function() {
+  it('should allow add structured stories to the game', function() {
     
   });
   
-  it('should add free-form stories to the game', function() {
+  it('should allow add free-form stories to the game', function() {
     
   });
   
@@ -93,11 +173,13 @@ describe('Controller: MainCtrl', function () {
   });
   
   it('should calculate the results average points', function() {
-    
+    setTestGame();
+    expect(scope.getResultsAverage()).toBe(11);
   });
   
   it('should give the total number of active participants in the game', function() {
-    
+    setTestGame();
+    expect(scope.totalOfOnlineParticipants()).toBe(3);
   });
   
   it('should allow the game owner to accept the round', function() {
@@ -105,11 +187,19 @@ describe('Controller: MainCtrl', function () {
   });
   
   it('should allow the game owner to play again the round', function() {
-    
+    setTestGame();
+    scope.playAgain();
+    expect(scope.game.estimate.results).toEqual([]);
   });
   
   it('should allow the game owner to reset the round', function() {
-    
+    setTestGame();
+    var idx = scope.game.estimate.id;
+    scope.resetRound();
+    expect(scope.game.estimate).toBe(false);
+    expect(scope.game.stories[idx].startedAt).toBe(false);
+    expect(scope.game.stories[idx].endedAt).toBe(false);
+    expect(scope.game.stories[idx].status).toBe('queue');
   });
   
   it('should allow the game owner to reveal the cards in the round', function() {
@@ -117,11 +207,7 @@ describe('Controller: MainCtrl', function () {
   });
   
   it('should set a card deck array that can be used in games', function() {
-    var decks = [
-      [0, 1, 2, 4, 8, 16, 32, 64, 128, '?'],
-      [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?']
-    ];
-    expect(scope.decks).toEqual(decks);
+    expect(scope.decks).toEqual(VALID_CARD_DECKS);
   });
   
   it('should set a default `newGame` value', function() {

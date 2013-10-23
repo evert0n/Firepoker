@@ -178,7 +178,7 @@ angular.module('firePokerApp')
         var sum = 0;
         angular.forEach($scope.game.estimate.results, function(result) {
           if (result.points && angular.isNumber(result.points)) {
-            sum += +result.points;
+            sum += result.points;
           }
         });
         avg = Math.ceil(sum / $scope.game.estimate.results.length);
