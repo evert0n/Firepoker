@@ -236,7 +236,7 @@ angular.module('firePokerApp')
       [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?']
     ];
 
-    // Defaults
+    // Set Defaults
     $scope.newGame = {deck: 0};
     $scope.showCardDeck = true;
     $scope.showSelectEstimate = false;
@@ -244,12 +244,8 @@ angular.module('firePokerApp')
     $scope.disablePlayAgainAndRevealButtons = false;
     $scope.showCards = false;
 
-    // Update game
-    $scope.$watch('game', function(game) {
-      if (!game) {
-        return;
-      }
-      // Set card deck visibility
+    // Set card deck visibility
+    var setShowCardDeck = function() {
       if (game.estimate && game.estimate.results) {
         angular.forEach(game.estimate.results, function(result) {
           if (
@@ -262,6 +258,14 @@ angular.module('firePokerApp')
           }
         });
       }
+    };
+    
+    // Update game
+    $scope.$watch('game', function(game) {
+      if (!game) {
+        return;
+      }
+      setShowCardDeck();
       // Set estimation form visibility
       if (
         game.estimate &&

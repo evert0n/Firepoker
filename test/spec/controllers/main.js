@@ -25,8 +25,8 @@ describe('Controller: MainCtrl', function () {
     });
   }));
   
-  // Regex match for UUID's
-  var UUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/; 
+  // Valid regex match for UUID's
+  var VALID_UUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/; 
 
   // Current valid/available card decks
   var VALID_CARD_DECKS = [
@@ -115,11 +115,11 @@ describe('Controller: MainCtrl', function () {
   // });
   
   it('should set an user id (UID) if empty', function() {
-    expect(scope.fp.user.id).toMatch(UUID);
+    expect(scope.fp.user.id).toMatch(VALID_UUID);
   });
   
   it('should set a group id (GID) if empty', function() {
-    expect(scope.fp.gid).toMatch(UUID);
+    expect(scope.fp.gid).toMatch(VALID_UUID);
   });
   
   it('should set `showNavBar` to FALSE in the app root (/) path', function() {
@@ -203,7 +203,9 @@ describe('Controller: MainCtrl', function () {
   });
   
   it('should allow the game owner to reveal the cards in the round', function() {
-    
+    setTestGame();
+    scope.revealCards();
+    expect(scope.game.estimate.status).toBe('reveal');
   });
   
   it('should set a card deck array that can be used in games', function() {
@@ -235,27 +237,33 @@ describe('Controller: MainCtrl', function () {
   });
   
   it('should set `showCardDeck` to false if the user already estimated the story', function() {
-    
+    setTestGame();
+    expect(scope.showCardDeck).toBe(false);
   });
   
   it('should set `showSelectEstimate` to true if the user is the game owner', function() {
-    
+    setTestGame();
+    expect(scope.showSelectEstimate).toBe(true);
   });
   
   it('should set `newEstimate` average points', function() {
-    
+    setTestGame();
+    expect(scope.newEstimate).toBe(true);
   });
   
   it('should set `showAddStory` to true if the user is the game owner', function() {
-    
+    setTestGame();
+    expect(scope.showAddStory).toBe(true);
   });
   
   it('should set `showCards` to true if the current round status is equal to `reveal`', function() {
-    
+    setTestGame();
+    expect(scope.disablePlayAgainAndRevealButtons).toBe(true);
   });
   
   it('should set `showCards` to true if all participants estimated the current round', function() {
-    
+    setTestGame();
+    expect(scope.showCards).toBe(true);
   });
   
 });
