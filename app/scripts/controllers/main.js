@@ -34,9 +34,11 @@ angular.module('firePokerApp')
       $cookieStore.put('fp', $scope.fp);
     }
 
-		// Show navbar?
-		$rootScope.showNavbar = $location.path() !== '/';
-		
+    // Is landing page?
+    $rootScope.isLandingPage = function() {
+      return $location.path() !== '/';
+    };
+
     // Initialize Firebase
     var ref = new Firebase(URL);
 
@@ -240,7 +242,6 @@ angular.module('firePokerApp')
     $scope.newGame = {deck: 0};
     $scope.showCardDeck = true;
     $scope.showSelectEstimate = false;
-    $scope.showAddStory = false;
     $scope.disablePlayAgainAndRevealButtons = false;
     $scope.showCards = false;
 
@@ -259,7 +260,7 @@ angular.module('firePokerApp')
         });
       }
     };
-    
+
     // Set estimation form visibility
     $scope.setShowSelectEstimate = function() {
       if (
@@ -270,27 +271,20 @@ angular.module('firePokerApp')
         $scope.showSelectEstimate = true;
       }
     };
-    
+
     // Set new estimate average points
     $scope.setNewEstimate = function() {
       $scope.newEstimate = { points: $scope.getResultsAverage() };
     };
-    
-    // Set add story form visibility
-    $scope.setShowAddStory = function() {
-      if ($scope.game.owner && $scope.game.owner.id === $scope.fp.user.id) {
-        $scope.showAddStory = true;
-      }
-    };
-    
+
     // Disable play again and reveal buttons if results are empty
     $scope.setDisablePlayAgainAndRevealButtons = function() {
       if (!$scope.game.estimate.results || $scope.game.estimate.results.length === 0) {
         $scope.disablePlayAgainAndRevealButtons = true;
       }
     }
-    
-    // Show cards? 
+
+    // Show cards?
     $scope.setShowCards = function() {
       if ($scope.game.estimate.status == 'reveal') {
         $scope.showCards = true;
@@ -303,7 +297,7 @@ angular.module('firePokerApp')
         $scope.showCards = true;
       }
     }
-    
+
     // Update game
     $scope.$watch('game', function(game) {
       if (!game) {
@@ -312,9 +306,8 @@ angular.module('firePokerApp')
       $scope.setShowCardDeck();
       $scope.setShowSelectEstimate();
       $scope.setNewEstimate();
-      $scope.setShowAddStory();
       $scope.setDisablePlayAgainAndRevealButtons();
       $scope.setShowCards();
     });
-  });
 
+  });
