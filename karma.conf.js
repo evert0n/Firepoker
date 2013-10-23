@@ -9,10 +9,14 @@ files = [
   JASMINE_ADAPTER,
   'app/components/angular/angular.js',
   'app/components/angular-mocks/angular-mocks.js',
+  'app/components/angular-cookies/angular-cookies.js',
   'app/scripts/*.js',
   'app/scripts/**/*.js',
   'test/mock/**/*.js',
-  'test/spec/**/*.js'
+  'test/spec/**/*.js',
+  'https://cdn.firebase.com/v0/firebase.js',
+  'https://cdn.firebase.com/libs/angularfire/0.3.0/angularfire.min.js',
+  'app/components/angular-contenteditable/angular-contenteditable.js'
 ];
 
 // list of files to exclude
@@ -36,7 +40,7 @@ colors = true;
 logLevel = LOG_INFO;
 
 // enable / disable watching file and executing tests whenever any file changes
-autoWatch = false;
+autoWatch = true;
 
 // Start these browsers, currently available:
 // - Chrome

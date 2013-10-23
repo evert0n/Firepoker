@@ -84,7 +84,7 @@ describe('Controller: MainCtrl', function () {
     
   });
   
-  it('should allow users to delete stories in the queue', function() {
+  it('should allow the game owner to delete stories', function() {
     
   });
   
