@@ -36,6 +36,9 @@ describe('Controller: MainCtrl', function () {
     [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?']
   ];
   
+  // Firebase URL
+  var FIREBASE_URL = 'https://pzfqrq7kjy.firebaseio.com';
+  
   // Set a test game for tests
   var setTestGame = function() {
     scope.game = {
@@ -114,10 +117,6 @@ describe('Controller: MainCtrl', function () {
     }
   };
   
-  xit('should set URL constant with a firebaseIO.com endpoint', function() {
-    expect(MainCtrl.URL).toBe('https://pzfqrq7kjy.firebaseio.com');
-  });
-  
   it('should set an user id (UID) if empty', function() {
     expect(scope.fp.user.id).toMatch(VALID_UUID);
   });
@@ -136,7 +135,7 @@ describe('Controller: MainCtrl', function () {
     expect(rootScope.isLandingPage()).toEqual(true);
   });
   
-  xit('should redirect to create a new game with a GID', function() {
+  it('should redirect to create a new game with a GID', function() {
     
   });
   

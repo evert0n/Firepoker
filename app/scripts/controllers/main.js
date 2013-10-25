@@ -1,19 +1,23 @@
 'use strict';
 
-function s4() {
-  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-}
-
-function guid() {
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-}
-
 angular.module('firePokerApp')
   .controller('MainCtrl', function ($rootScope, $scope, $cookieStore, $location, $routeParams, angularFire) {
 
     // Firebase URL
     var URL = 'https://pzfqrq7kjy.firebaseio.com';
 
+    // Initialize Firebase
+    var ref = new Firebase(URL);
+
+    // UUID generator
+    var s4 = function() {
+      return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    };
+    
+    var guid = function() {
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    };
+    
     // Load cookies
     $scope.fp = $cookieStore.get('fp');
     if (!$scope.fp) {
@@ -38,9 +42,6 @@ angular.module('firePokerApp')
     $rootScope.isLandingPage = function() {
       return $location.path() !== '/';
     };
-
-    // Initialize Firebase
-    var ref = new Firebase(URL);
 
     // Generate a new game
     if ($location.path() === '/games/new' || $location.path() === '/games/new/') {
