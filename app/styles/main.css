@@ -78,3 +78,8 @@ span[contenteditable=true] {
 .footer {
 	margin-top:200px;
 }
+
+div.logo {
+	font-size: 35px;
+	font-weight: bold;
+}

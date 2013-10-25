@@ -46,7 +46,7 @@ angular.module('firePokerApp')
     // Generate a new game
     if ($location.path() === '/games/new' || $location.path() === '/games/new/') {
       var id = guid();
-      $location.path('/games/new/' + id);
+      $location.path('/games/new/' + id).replace();
     }
 
     // Redirect to set full name if empty...
@@ -55,7 +55,7 @@ angular.module('firePokerApp')
       $location.path() === '/games/' + $routeParams.gid &&
       !$scope.fp.user.fullname
     ) {
-      $location.path('/games/join/' + $routeParams.gid);
+      $location.path('/games/join/' + $routeParams.gid).replace();
     }
 
     // If fullname already set redirect to the game
@@ -64,7 +64,7 @@ angular.module('firePokerApp')
       $location.path() === '/games/join/' + $routeParams.gid &&
       $scope.fp.user.fullname
     ) {
-      $location.path('/games/' + $routeParams.gid);
+      $location.path('/games/' + $routeParams.gid).replace();
     }
 
     // Load game & register presence
@@ -111,7 +111,7 @@ angular.module('firePokerApp')
       newGame.estimate = false;
       ref.child('/games/' + $routeParams.gid).set(newGame);
       $cookieStore.put('fp', $scope.fp);
-      $location.path('/games/' + $routeParams.gid);
+      $location.path('/games/' + $routeParams.gid).replace();
     };
 
     // Create story
@@ -171,7 +171,7 @@ angular.module('firePokerApp')
     // Set full name
     $scope.setFullname = function() {
       $cookieStore.put('fp', $scope.fp);
-      $location.path('/games/' + $routeParams.gid);
+      $location.path('/games/' + $routeParams.gid).replace();
     };
 
     // Get estimate results average
