@@ -10,6 +10,7 @@ angular.module('firePokerApp')
     var ref = new Firebase(URL);
 
     // UUID generator
+    // Snippet from: http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
     var s4 = function() {
       return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     };
@@ -43,52 +44,62 @@ angular.module('firePokerApp')
       return $location.path() !== '/';
     };
 
-    // Generate a new game
-    if ($location.path() === '/games/new' || $location.path() === '/games/new/') {
-      var id = guid();
-      $location.path('/games/new/' + id).replace();
-    }
+    // Redirect with a GID to create new games
+    $scope.redirectToCreateNewGame = function() {
+      if ($location.path() === '/games/new' || $location.path() === '/games/new/') {
+        $scope.fp.gid = guid();
+        $location.path('/games/new/' + $scope.fp.gid);
+        $location.replace();
+      }
+    };
+    
+    // Redirect to set fullname if empty
+    $scope.redirectToSetFullnameIfEmpty = function() {
+      if (
+        $routeParams.gid &&
+        $location.path() === '/games/' + $routeParams.gid &&
+        !$scope.fp.user.fullname
+      ) {
+        $location.path('/games/join/' + $routeParams.gid);
+        $location.replace();
+      }
+    };
 
-    // Redirect to set full name if empty...
-    if (
-      $routeParams.gid &&
-      $location.path() === '/games/' + $routeParams.gid &&
-      !$scope.fp.user.fullname
-    ) {
-      $location.path('/games/join/' + $routeParams.gid).replace();
-    }
+    // Redirect to game if fullname already set
+    $scope.redirectToGameIfFullnameAlreadySet = function() {
+      if (
+        $routeParams.gid &&
+        $location.path() === '/games/join/' + $routeParams.gid &&
+        $scope.fp.user.fullname
+      ) {
+        $location.path('/games/' + $routeParams.gid).replace();
+      }
+    };
 
-    // If fullname already set redirect to the game
-    if (
-      $routeParams.gid &&
-      $location.path() === '/games/join/' + $routeParams.gid &&
-      $scope.fp.user.fullname
-    ) {
-      $location.path('/games/' + $routeParams.gid).replace();
-    }
-
-    // Load game & register presence
-    if ($routeParams.gid && $location.path() === '/games/' + $routeParams.gid) {
-      angularFire(ref.child('/games/' + $routeParams.gid), $scope, 'game').then(function() {
-        // Is current user the game owner?
-        if ($scope.game.owner && $scope.game.owner.id && $scope.game.owner.id === $scope.fp.user.id) {
-          $scope.isOwner = true;
-        } else {
-          $scope.isOwner = false;
-        }
-      });
-      ref.child('/games/' + $routeParams.gid + '/participants/' + $scope.fp.user.id).set($scope.fp.user);
-      var onlineRef = ref.child('/games/' + $routeParams.gid + '/participants/' + $scope.fp.user.id + '/online');
-      var connectedRef = ref.child('/.info/connected');
-      connectedRef.on('value', function(snap) {
-        if (snap.val() === true) {
-          // We're connected (or reconnected)!  Set up our presence state and
-          // tell the server to set a timestamp when we leave.
-          onlineRef.onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
-          onlineRef.set(true);
-        }
-      });
-    }
+    // Load game and register presence
+    $scope.loadGame = function() {
+      if ($routeParams.gid && $location.path() === '/games/' + $routeParams.gid) {
+        angularFire(ref.child('/games/' + $routeParams.gid), $scope, 'game').then(function() {
+          // Is current user the game owner?
+          if ($scope.game.owner && $scope.game.owner.id && $scope.game.owner.id === $scope.fp.user.id) {
+            $scope.isOwner = true;
+          } else {
+            $scope.isOwner = false;
+          }
+        });
+        ref.child('/games/' + $routeParams.gid + '/participants/' + $scope.fp.user.id).set($scope.fp.user);
+        var onlineRef = ref.child('/games/' + $routeParams.gid + '/participants/' + $scope.fp.user.id + '/online');
+        var connectedRef = ref.child('/.info/connected');
+        connectedRef.on('value', function(snap) {
+          if (snap.val() === true) {
+            // We're connected (or reconnected)!  Set up our presence state and
+            // tell the server to set a timestamp when we leave.
+            onlineRef.onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
+            onlineRef.set(true);
+          }
+        });
+      }
+    };
 
     // Create game
     $scope.createGame = function() {
@@ -299,7 +310,15 @@ angular.module('firePokerApp')
       }
     }
 
-    // Update game
+    // Redirect with a GID to create new games
+    $scope.redirectToCreateNewGame();
+    // Redirect to set fullname if empty
+    $scope.redirectToSetFullnameIfEmpty();
+    // Redirect to game if fullname already set
+    $scope.redirectToGameIfFullnameAlreadySet();
+    // Load game and register presence
+    $scope.loadGame();
+    // Update view on game changes
     $scope.$watch('game', function(game) {
       if (!game) {
         return;

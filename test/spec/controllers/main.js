@@ -12,15 +12,27 @@ describe('Controller: MainCtrl', function () {
       scope,
       rootScope,
       location,
-      browser,
+      routeParams,
       firebase;
       
+  // Location Mock
+  // Example from: https://github.com/angular-app/angular-app/blob/master/client/test/unit/common/services/breadcrumbs.spec.js
+  var LocationMock = function (initialPath) {
+    var pathStr = initialPath || '';
+    this.path = function (pathArg) {
+      return pathArg ? pathStr = pathArg : pathStr;
+    };
+    this.replace = function () {
+      return;
+    };
+  };
+    
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, $location, $browser, angularFire) {
+  beforeEach(inject(function ($controller, $rootScope, $injector, $location, $routeParams, angularFire) {
     scope = $rootScope.$new();
     rootScope = $rootScope;
     location = $location;
-    browser = $browser;
+    routeParams = $routeParams;
     MainCtrl = $controller('MainCtrl', {
       $scope: scope,
       $location: location
@@ -135,18 +147,42 @@ describe('Controller: MainCtrl', function () {
     expect(rootScope.isLandingPage()).toEqual(true);
   });
   
-  it('should redirect to create a new game with a GID', function() {
-    
+  it('should redirect to create a new game with a new GID', function() {
+    var oldGID = scope.fp.gid;
+    spyOn(location, 'path').andCallFake(new LocationMock().path);
+    spyOn(location, 'replace').andCallFake(new LocationMock().replace);
+    location.path('/games/new');
+    scope.redirectToCreateNewGame();
+    expect(scope.fp.gid).not.toBe(oldGID);
+    expect(scope.fp.gid).toMatch(VALID_UUID);
+    expect(location.path.calls.length).toBe(3);
+    expect(location.replace.calls.length).toBe(1);
+    expect(location.path).toHaveBeenCalledWith('/games/new');
+    expect(location.path).toHaveBeenCalledWith();
+    expect(location.path).toHaveBeenCalledWith('/games/new/' + scope.fp.gid);
+    expect(location.replace).toHaveBeenCalled();
   });
   
-  // it('should redirect to set fullname if empty', function() {
-  //   
-  // });
-  // 
-  // it('should load the game and set presence', function() {
-  //   
-  // });
-  // 
+  it('should redirect to set fullname if empty', function() {
+    routeParams.gid = scope.fp.gid;
+    scope.fp.user.fullname = null;
+    spyOn(location, 'path').andCallFake(new LocationMock().path);
+    spyOn(location, 'replace').andCallFake(new LocationMock().replace);
+    location.path('/games/' + routeParams.gid);
+    scope.redirectToSetFullnameIfEmpty();
+    expect(routeParams.gid).toBe(scope.fp.gid);
+    expect(location.path.calls.length).toBe(3);
+    expect(location.replace.calls.length).toBe(1);
+    expect(location.path).toHaveBeenCalledWith('/games/' + routeParams.gid);
+    expect(location.path).toHaveBeenCalledWith();
+    expect(location.path).toHaveBeenCalledWith('/games/join/' + routeParams.gid);
+    expect(location.replace).toHaveBeenCalled();
+  });
+  
+  xit('should load the game and set presence', function() {
+   // TBD 
+  });
+  
   // it('should create games', function() {
   //   // scope.createGame();
   // });
