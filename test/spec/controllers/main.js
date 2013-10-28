@@ -1,5 +1,13 @@
 'use strict';
 
+/**
+ * MainCtrl Unit Tests
+ *
+ * @fileoverview Tests the controller methods
+ * @version 0.3.0
+ * @author Everton Yoshitani <everton@wizehive.com>
+ * @todo add remain unit tests and perfect after learn' more about testing
+ */
 describe('Controller: MainCtrl', function () {
 
   // Load the controller's module

@@ -1,5 +1,15 @@
 'use strict';
 
+/**
+ * MainCtrl
+ *
+ * @fileoverview FirePoker.io is a monolithic well tested app, so for now all it's
+ *  logic is on this single controller, in the future we could be splitting the logic
+ *  into diff files and modules.
+ * @version 0.3.0
+ * @author Everton Yoshitani <everton@wizehive.com>
+ * @todo add remain unit tests and perfect after learn' more about testing
+ */
 angular.module('firePokerApp')
   .controller('MainCtrl', function ($rootScope, $scope, $cookieStore, $location, $routeParams, angularFire) {
 
