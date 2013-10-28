@@ -13,26 +13,25 @@ describe('Controller: MainCtrl', function () {
       rootScope,
       location,
       routeParams,
+      cookieStore,
       firebase;
       
   // Location Mock
-  // Example from: https://github.com/angular-app/angular-app/blob/master/client/test/unit/common/services/breadcrumbs.spec.js
+  // Snippet from: https://github.com/angular-app/angular-app/blob/master/client/test/unit/common/services/breadcrumbs.spec.js
   var LocationMock = function (initialPath) {
     var pathStr = initialPath || '';
     this.path = function (pathArg) {
       return pathArg ? pathStr = pathArg : pathStr;
     };
-    this.replace = function () {
-      return;
-    };
   };
-    
+  
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, $injector, $location, $routeParams, angularFire) {
+  beforeEach(inject(function ($controller, $rootScope, $injector, $location, $routeParams, $cookieStore, angularFire) {
     scope = $rootScope.$new();
     rootScope = $rootScope;
     location = $location;
     routeParams = $routeParams;
+    cookieStore = $cookieStore;
     MainCtrl = $controller('MainCtrl', {
       $scope: scope,
       $location: location
@@ -121,6 +120,15 @@ describe('Controller: MainCtrl', function () {
           "status" : "active",
           "startedAt" : 1382370236239,
           "id" : 0
+        },
+        {
+          "results" : false,
+          "points" : 0,
+          "title" : "As a/an user I would like to add stories so that I and my team can estimate",
+          "endedAt" : false,
+          "status" : "queue",
+          "startedAt" : false,
+          "id" : 0
         }
       ],
       "name" : "Demo",
@@ -150,7 +158,7 @@ describe('Controller: MainCtrl', function () {
   it('should redirect to create a new game with a new GID', function() {
     var oldGID = scope.fp.gid;
     spyOn(location, 'path').andCallFake(new LocationMock().path);
-    spyOn(location, 'replace').andCallFake(new LocationMock().replace);
+    spyOn(location, 'replace');
     location.path('/games/new');
     scope.redirectToCreateNewGame();
     expect(scope.fp.gid).not.toBe(oldGID);
@@ -167,7 +175,7 @@ describe('Controller: MainCtrl', function () {
     routeParams.gid = scope.fp.gid;
     scope.fp.user.fullname = null;
     spyOn(location, 'path').andCallFake(new LocationMock().path);
-    spyOn(location, 'replace').andCallFake(new LocationMock().replace);
+    spyOn(location, 'replace');
     location.path('/games/' + routeParams.gid);
     scope.redirectToSetFullnameIfEmpty();
     expect(routeParams.gid).toBe(scope.fp.gid);
@@ -183,33 +191,134 @@ describe('Controller: MainCtrl', function () {
    // TBD 
   });
   
-  // it('should create games', function() {
-  //   // scope.createGame();
-  // });
-  // 
-  // it('should allow add structured stories to the game', function() {
-  //   
-  // });
-  // 
-  // it('should allow add free-form stories to the game', function() {
-  //   
-  // });
-  // 
-  // it('should set the latest added story as the active story in the round if none set', function() {
-  //   
-  // });
-  // 
-  // it('should allow users to set stories for estimating', function() {
-  //   
-  // });
-  // 
-  // it('should allow the game owner to delete stories', function() {
-  //   
-  // });
-  // 
-  // it('should allow users to set their full names', function() {
-  //   
-  // });
+  it('should create games', function() {
+    var newGame = {
+      name: 'Test Game',
+      description: 'A unit test game',
+      stories: 'Story 1\nStore 2\nStory 3',
+      deck: 0
+    };
+    var expectedStories = [];
+    angular.forEach(newGame.stories.split('\n'), function(title) {
+      var story = {
+        title: title,
+        status: 'queue'
+      };
+      expectedStories.push(story);
+    });
+    var setNewGameMock = function(game) {
+      scope.game = game;
+    };
+    var now = new Date().getTime() - 1;
+    spyOn(scope, 'setNewGame').andCallFake(setNewGameMock);
+    spyOn(cookieStore, 'put');
+    spyOn(location, 'path').andCallFake(new LocationMock().path);
+    spyOn(location, 'replace');
+    scope.newGame = newGame;
+    routeParams.gid = scope.fp.gid;
+    scope.createGame();
+    expect(scope.game.stories).toEqual(expectedStories);
+    expect(scope.game.status).toBe('active');
+    expect(scope.game.created).toBeGreaterThan(now);
+    expect(scope.game.owner).toEqual(scope.fp.user);
+    expect(scope.game.participants).toBe(false);
+    expect(scope.game.estimate).toBe(false);
+    expect(scope.game.deck).toBe(0);
+    expect(cookieStore.put.calls.length).toBe(1);
+    expect(location.path.calls.length).toBe(1);
+    expect(location.replace.calls.length).toBe(1);
+    expect(cookieStore.put).toHaveBeenCalledWith('fp', scope.fp);
+    expect(location.path).toHaveBeenCalledWith('/games/' + routeParams.gid);
+    expect(location.replace).toHaveBeenCalled();
+  });
+  
+  xit('should set new games', function() {
+    // TBD
+  });
+  
+  it('should allow add structured stories to the game', function() {
+    setTestGame();
+    scope.newStory = {
+      asA: 'user',
+      iWouldLikeTo: 'add stories',
+      soThat: 'I and my team can estimate'
+    };
+    var now = new Date().getTime() - 1;
+    var id = 0;
+    // cleanup current stories and estimate for test
+    delete scope.game.stories;
+    scope.game.estimate = false;
+    // test
+    scope.createStory('structured');
+    expect(scope.game.stories[id].title).toEqual('As a/an user I would like to add stories so that I and my team can estimate');
+    expect(scope.game.stories[id].results).toBe(false);
+    expect(scope.game.stories[id].points).toBe(0);
+    expect(scope.game.stories[id].status).toBe('active');
+    expect(scope.game.stories[id].startedAt).toBeGreaterThan(now);
+    expect(scope.game.stories[id].endedAt).toBe(false);
+    expect(scope.game.stories[id].id).toBe(id);
+    expect(scope.newStory).toBe(null);
+    expect(scope.game.estimate).toEqual(scope.game.stories[id]);
+  });
+  
+  it('should allow add free-form stories to the game', function() {
+    setTestGame();
+    scope.newStory = {
+      title: 'Test Story',
+      notes: 'This is a test story for unit tests'
+    };
+    var now = new Date().getTime() - 1;
+    var id = 0;
+    // cleanup current stories and estimate for test
+    delete scope.game.stories;
+    scope.game.estimate = false;
+    // test
+    scope.createStory('whatever');
+    expect(scope.game.stories[id].title).toEqual('Test Story');
+    expect(scope.game.stories[id].results).toBe(false);
+    expect(scope.game.stories[id].points).toBe(0);
+    expect(scope.game.stories[id].status).toBe('active');
+    expect(scope.game.stories[id].startedAt).toBeGreaterThan(now);
+    expect(scope.game.stories[id].endedAt).toBe(false);
+    expect(scope.game.stories[id].id).toBe(id);
+    expect(scope.newStory).toBe(null);
+    expect(scope.game.estimate).toEqual(scope.game.stories[id]);
+  });
+  
+  it('should allow users to set stories for estimating', function() {
+    setTestGame();
+    var currentStory = scope.game.estimate;
+    var newStoryId = 1;
+    var now = new Date().getTime() - 1;
+    spyOn(scope, 'resetRound');
+    scope.setStory(newStoryId);
+    expect(scope.resetRound).toHaveBeenCalled();
+    expect(scope.game.estimate.title).toEqual(scope.game.stories[newStoryId].title);
+    expect(scope.game.estimate.id).toEqual(newStoryId);
+    expect(scope.game.estimate.status).toEqual('active');
+    expect(scope.game.estimate.startedAt).toBeGreaterThan(now);
+    expect(scope.game.estimate.endedAt).toBe(false);
+  });
+  
+  it('should allow the game owner to delete stories', function() {
+    setTestGame();
+    var totalOfStories = scope.game.stories.length;
+    var firstStoryTitle = scope.game.stories[0].title;
+    scope.deleteStory(0);
+    expect(scope.game.stories.length).toEqual(totalOfStories - 1);
+    expect(scope.game.stories[0].title).not.toEqual(firstStoryTitle);
+  });
+  
+  it('should allow users to set their full names', function() {
+    spyOn(cookieStore, 'put');
+    spyOn(location, 'path').andCallFake(new LocationMock().path);
+    spyOn(location, 'replace');
+    routeParams.gid = scope.fp.gid;
+    scope.setFullname();
+    expect(cookieStore.put).toHaveBeenCalledWith('fp', scope.fp);
+    expect(location.path).toHaveBeenCalledWith('/games/' + routeParams.gid);
+    expect(location.replace).toHaveBeenCalled();
+  });
   
   it('should calculate the results average points', function() {
     setTestGame();

@@ -120,11 +120,17 @@ angular.module('firePokerApp')
       newGame.owner = $scope.fp.user;
       newGame.participants = false;
       newGame.estimate = false;
-      ref.child('/games/' + $routeParams.gid).set(newGame);
+      $scope.setNewGame(newGame);
       $cookieStore.put('fp', $scope.fp);
-      $location.path('/games/' + $routeParams.gid).replace();
+      $location.path('/games/' + $routeParams.gid);
+      $location.replace();
     };
 
+    // Set new game
+    $scope.setNewGame = function(game) {
+      ref.child('/games/' + $routeParams.gid).set(game);
+    };
+    
     // Create story
     $scope.createStory = function(type) {
       if (type === 'structured') {
@@ -182,7 +188,8 @@ angular.module('firePokerApp')
     // Set full name
     $scope.setFullname = function() {
       $cookieStore.put('fp', $scope.fp);
-      $location.path('/games/' + $routeParams.gid).replace();
+      $location.path('/games/' + $routeParams.gid);
+      $location.replace();
     };
 
     // Get estimate results average
@@ -312,12 +319,16 @@ angular.module('firePokerApp')
 
     // Redirect with a GID to create new games
     $scope.redirectToCreateNewGame();
+    
     // Redirect to set fullname if empty
     $scope.redirectToSetFullnameIfEmpty();
+    
     // Redirect to game if fullname already set
     $scope.redirectToGameIfFullnameAlreadySet();
+    
     // Load game and register presence
     $scope.loadGame();
+    
     // Update view on game changes
     $scope.$watch('game', function(game) {
       if (!game) {
