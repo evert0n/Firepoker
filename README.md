@@ -1,4 +1,4 @@
-FirePoker [![Build Status](https://travis-ci.org/evert0n/Firepoker.png?branch=master)](https://travis-ci.org/evert0n/Firepoker)
+FirePoker [![Build Status](https://travis-ci.org/Wizehive/Firepoker.png?branch=master)](https://travis-ci.org/Wizehive/Firepoker)
 =========
 
 Agile Planning Poker® powered by AngularJS and Firebase
