@@ -24,7 +24,7 @@
     <![endif]-->
     
     <!-- Fixed navbar -->
-    <div ng-show="showNavbar" class="navbar navbar-default navbar-fixed-top">
+    <div ng-show="isLandingPage()" class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -45,7 +45,7 @@
     <!-- Add your site or application content here -->
     <div class="container" ng-view></div>
     
-    <div ng-show="showNavbar" class="container">
+    <div ng-show="isLandingPage()" class="container">
       <div class="vspace">
         <p><a href="https://github.com/Wizehive/Firepoker" target="_blank">FirePoker</a> was built by <a href="http://www.wizehive.com/" target="_blank">WizeHive</a> using <a href="http://www.angularjs.org/" target="_blank">AngularJS</a> and <a href="http://www.firebase.com" target="_blank">Firebase</a>.</p>
       </div>

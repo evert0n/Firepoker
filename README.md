@@ -16,7 +16,8 @@ Getting Started
 * Clone the repository: `git clone https://github.com/Wizehive/Firepoker.git`
 * Install with [NPM](https://github.com/isaacs/npm): `npm install`
 * Install with [Bower](https://github.com/bower/bower): `bower install`
-* Run the local server: `grunt server`
+* To run the local server: `grunt server`
+* To run unit tests: `grunt karma:unit`
 
 Contributing
 =========

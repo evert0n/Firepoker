@@ -1,19 +1,34 @@
 'use strict';
 
-function s4() {
-  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-}
-
-function guid() {
-  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-}
-
+/**
+ * MainCtrl
+ *
+ * @fileoverview FirePoker.io is a monolithic well tested app, so for now all it's
+ *  logic is on this single controller, in the future we could be splitting the logic
+ *  into diff files and modules.
+ * @version 0.3.0
+ * @author Everton Yoshitani <everton@wizehive.com>
+ * @todo add remain unit tests and perfect after learn' more about testing
+ */
 angular.module('firePokerApp')
   .controller('MainCtrl', function ($rootScope, $scope, $cookieStore, $location, $routeParams, angularFire) {
 
     // Firebase URL
     var URL = 'https://pzfqrq7kjy.firebaseio.com';
 
+    // Initialize Firebase
+    var ref = new Firebase(URL);
+
+    // UUID generator
+    // Snippet from: http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+    var s4 = function() {
+      return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    };
+    
+    var guid = function() {
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    };
+    
     // Load cookies
     $scope.fp = $cookieStore.get('fp');
     if (!$scope.fp) {
@@ -34,58 +49,67 @@ angular.module('firePokerApp')
       $cookieStore.put('fp', $scope.fp);
     }
 
-    // Show navbar?
-    $rootScope.showNavbar = $location.path() !== '/';
+    // Is landing page?
+    $rootScope.isLandingPage = function() {
+      return $location.path() !== '/';
+    };
 
-    // Initialize Firebase
-    var ref = new Firebase(URL);
+    // Redirect with a GID to create new games
+    $scope.redirectToCreateNewGame = function() {
+      if ($location.path() === '/games/new' || $location.path() === '/games/new/') {
+        $scope.fp.gid = guid();
+        $location.path('/games/new/' + $scope.fp.gid);
+        $location.replace();
+      }
+    };
+    
+    // Redirect to set fullname if empty
+    $scope.redirectToSetFullnameIfEmpty = function() {
+      if (
+        $routeParams.gid &&
+        $location.path() === '/games/' + $routeParams.gid &&
+        !$scope.fp.user.fullname
+      ) {
+        $location.path('/games/join/' + $routeParams.gid);
+        $location.replace();
+      }
+    };
 
-    // Generate a new game
-    if ($location.path() === '/games/new' || $location.path() === '/games/new/') {
-      var id = guid();
-      $location.path('/games/new/' + id).replace();
-    }
+    // Redirect to game if fullname already set
+    $scope.redirectToGameIfFullnameAlreadySet = function() {
+      if (
+        $routeParams.gid &&
+        $location.path() === '/games/join/' + $routeParams.gid &&
+        $scope.fp.user.fullname
+      ) {
+        $location.path('/games/' + $routeParams.gid).replace();
+      }
+    };
 
-    // Redirect to set full name if empty...
-    if (
-      $routeParams.gid &&
-      $location.path() === '/games/' + $routeParams.gid &&
-      !$scope.fp.user.fullname
-    ) {
-      $location.path('/games/join/' + $routeParams.gid).replace();
-    }
-
-    // If fullname already set redirect to the game
-    if (
-      $routeParams.gid &&
-      $location.path() === '/games/join/' + $routeParams.gid &&
-      $scope.fp.user.fullname
-    ) {
-      $location.path('/games/' + $routeParams.gid).replace();
-    }
-
-    // Load game & register presence
-    if ($routeParams.gid && $location.path() === '/games/' + $routeParams.gid) {
-      angularFire(ref.child('/games/' + $routeParams.gid), $scope, 'game').then(function() {
-        // Is current user the game owner?
-        if ($scope.game.owner && $scope.game.owner.id && $scope.game.owner.id === $scope.fp.user.id) {
-          $scope.isOwner = true;
-        } else {
-          $scope.isOwner = false;
-        }
-      });
-      ref.child('/games/' + $routeParams.gid + '/participants/' + $scope.fp.user.id).set($scope.fp.user);
-      var onlineRef = ref.child('/games/' + $routeParams.gid + '/participants/' + $scope.fp.user.id + '/online');
-      var connectedRef = ref.child('/.info/connected');
-      connectedRef.on('value', function(snap) {
-        if (snap.val() === true) {
-          // We're connected (or reconnected)!  Set up our presence state and
-          // tell the server to set a timestamp when we leave.
-          onlineRef.onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
-          onlineRef.set(true);
-        }
-      });
-    }
+    // Load game and register presence
+    $scope.loadGame = function() {
+      if ($routeParams.gid && $location.path() === '/games/' + $routeParams.gid) {
+        angularFire(ref.child('/games/' + $routeParams.gid), $scope, 'game').then(function() {
+          // Is current user the game owner?
+          if ($scope.game.owner && $scope.game.owner.id && $scope.game.owner.id === $scope.fp.user.id) {
+            $scope.isOwner = true;
+          } else {
+            $scope.isOwner = false;
+          }
+        });
+        ref.child('/games/' + $routeParams.gid + '/participants/' + $scope.fp.user.id).set($scope.fp.user);
+        var onlineRef = ref.child('/games/' + $routeParams.gid + '/participants/' + $scope.fp.user.id + '/online');
+        var connectedRef = ref.child('/.info/connected');
+        connectedRef.on('value', function(snap) {
+          if (snap.val() === true) {
+            // We're connected (or reconnected)!  Set up our presence state and
+            // tell the server to set a timestamp when we leave.
+            onlineRef.onDisconnect().set(Firebase.ServerValue.TIMESTAMP);
+            onlineRef.set(true);
+          }
+        });
+      }
+    };
 
     // Create game
     $scope.createGame = function() {
@@ -106,11 +130,17 @@ angular.module('firePokerApp')
       newGame.owner = $scope.fp.user;
       newGame.participants = false;
       newGame.estimate = false;
-      ref.child('/games/' + $routeParams.gid).set(newGame);
+      $scope.setNewGame(newGame);
       $cookieStore.put('fp', $scope.fp);
-      $location.path('/games/' + $routeParams.gid).replace();
+      $location.path('/games/' + $routeParams.gid);
+      $location.replace();
     };
 
+    // Set new game
+    $scope.setNewGame = function(game) {
+      ref.child('/games/' + $routeParams.gid).set(game);
+    };
+    
     // Create story
     $scope.createStory = function(type) {
       if (type === 'structured') {
@@ -168,7 +198,8 @@ angular.module('firePokerApp')
     // Set full name
     $scope.setFullname = function() {
       $cookieStore.put('fp', $scope.fp);
-      $location.path('/games/' + $routeParams.gid).replace();
+      $location.path('/games/' + $routeParams.gid);
+      $location.replace();
     };
 
     // Get estimate results average
@@ -178,7 +209,7 @@ angular.module('firePokerApp')
         var sum = 0;
         angular.forEach($scope.game.estimate.results, function(result) {
           if (result.points && angular.isNumber(result.points)) {
-            sum += +result.points;
+            sum += result.points;
           }
         });
         avg = Math.ceil(sum / $scope.game.estimate.results.length);
@@ -236,23 +267,17 @@ angular.module('firePokerApp')
       [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?']
     ];
 
-    // Default card deck
+    // Set Defaults
     $scope.newGame = {deck: 0};
+    $scope.showCardDeck = true;
+    $scope.showSelectEstimate = false;
+    $scope.disablePlayAgainAndRevealButtons = false;
+    $scope.showCards = false;
 
-    // Update game
-    $scope.$watch('game', function(game) {
-      // Defaults
-      $scope.showCardDeck = true;
-      $scope.showSelectEstimate = false;
-      $scope.showAddStory = false;
-      $scope.disablePlayAgainAndRevealButtons = false;
-      $scope.showCards = false;
-      if (!game) {
-        return;
-      }
-      // Set card deck visibility
-      if (game.estimate && game.estimate.results) {
-        angular.forEach(game.estimate.results, function(result) {
+    // Set card deck visibility
+    $scope.setShowCardDeck = function() {
+      if ($scope.game.estimate && $scope.game.estimate.results) {
+        angular.forEach($scope.game.estimate.results, function(result) {
           if (
             result &&
             result.user &&
@@ -263,36 +288,67 @@ angular.module('firePokerApp')
           }
         });
       }
-      // Set estimation form visibility
+    };
+
+    // Set estimation form visibility
+    $scope.setShowSelectEstimate = function() {
       if (
-        game.estimate &&
-        // game.estimate.results &&
-        game.owner &&
-        game.owner.id === $scope.fp.user.id
+        $scope.game.estimate &&
+        $scope.game.owner &&
+        $scope.game.owner.id === $scope.fp.user.id
       ) {
         $scope.showSelectEstimate = true;
       }
-      // Set new estimate average points
+    };
+
+    // Set new estimate average points
+    $scope.setNewEstimate = function() {
       $scope.newEstimate = { points: $scope.getResultsAverage() };
-      // Set add story form visibility
-      if (game.owner && game.owner.id === $scope.fp.user.id) {
-        $scope.showAddStory = true;
-      }
-      // Disable play again and reveal buttons if results are empty
-      if (!game.estimate.results || game.estimate.results.length === 0) {
+    };
+
+    // Disable play again and reveal buttons if results are empty
+    $scope.setDisablePlayAgainAndRevealButtons = function() {
+      if (!$scope.game.estimate.results || $scope.game.estimate.results.length === 0) {
         $scope.disablePlayAgainAndRevealButtons = true;
       }
-      // Show cards? 
+    }
+
+    // Show cards?
+    $scope.setShowCards = function() {
       if ($scope.game.estimate.status == 'reveal') {
         $scope.showCards = true;
       } else if (
-        game.estimate &&
-        game.estimate.results &&
-        game.estimate.results.length &&
-        game.estimate.results.length >= $scope.totalOfOnlineParticipants()
+        $scope.game.estimate &&
+        $scope.game.estimate.results &&
+        $scope.game.estimate.results.length &&
+        $scope.game.estimate.results.length >= $scope.totalOfOnlineParticipants()
       ) {
         $scope.showCards = true;
       }
-    });
-  });
+    }
 
+    // Redirect with a GID to create new games
+    $scope.redirectToCreateNewGame();
+    
+    // Redirect to set fullname if empty
+    $scope.redirectToSetFullnameIfEmpty();
+    
+    // Redirect to game if fullname already set
+    $scope.redirectToGameIfFullnameAlreadySet();
+    
+    // Load game and register presence
+    $scope.loadGame();
+    
+    // Update view on game changes
+    $scope.$watch('game', function(game) {
+      if (!game) {
+        return;
+      }
+      $scope.setShowCardDeck();
+      $scope.setShowSelectEstimate();
+      $scope.setNewEstimate();
+      $scope.setDisablePlayAgainAndRevealButtons();
+      $scope.setShowCards();
+    });
+
+  });
