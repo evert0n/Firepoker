@@ -10,4 +10,4 @@ before_script:
  - npm install --quiet
  - bower install --quiet
 
-script: grunt test
+script: grunt karma:unit
