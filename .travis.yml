@@ -10,7 +10,5 @@ before_script:
  - npm install -g grunt-cli@0.1.x
  - npm install --quiet
  - bower install --quiet
- - exec google-chrome --no-first-run
-
 
 script: grunt karma:unit
