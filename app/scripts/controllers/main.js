@@ -356,4 +356,108 @@ angular.module('firePokerApp')
       $scope.setShowCards();
     });
 
-  });
+    /* BEGIN Timer -------------- */
+    var timerRef = ref.child('/games/' + $routeParams.gid + '/timer');
+    timerRef.on('value', function(snap) {
+      var timerData = snap.val();
+      if (timerData != null) {
+        $scope.timerCounter = timerData.timerCounter;
+        $scope.updateTimerDisplay();
+        $scope.timerMessage = timerData.timerMessage;
+        $scope.isTimerRunning = timerData.isTimerRunning;
+        $scope.isTimerAtBeginning = timerData.isTimerAtBeginning;
+        var owner = timerData["owner"];
+        $scope.timerControlsEnabled = owner == null || owner.id == $scope.fp.user.id;
+        $scope.timerOwnerName = owner == null ? "" : owner.fullname;
+      }
+    });
+
+    var timerHandle;
+    var DEFAULT_COUNTER = 120;
+    $scope.timerControlsEnabled = true;
+    $scope.isTimerRunning = false;
+    $scope.timerCounter = DEFAULT_COUNTER;
+    $scope.timerDisplay = "2:00";
+    $scope.timerMessage = "";
+    $scope.timerOwnerName = "";
+    $scope.isTimerAtBeginning = $scope.timerCounter == DEFAULT_COUNTER;
+
+    $scope.onTimeout = function() {
+      $scope.decrementTimer();
+      if ($scope.isTimerExpired()) {
+        $scope.timerMessage = "Time is up!";
+        $scope.isTimerRunning = false;
+        $scope.captureTimer(true);
+      } else {
+        $scope.renewTimeout();
+      }
+    };
+
+    $scope.decrementTimer = function() {
+      $scope.timerCounter--;
+      if ($scope.timerCounter >= 0) {
+      $scope.updateTimerDisplay();
+      }
+      $scope.captureTimer();
+    };
+
+    $scope.captureTimer = function(resetOwner) {
+      var owner = resetOwner ? null : $scope.fp.user;
+      timerRef.set({
+        timerCounter: $scope.timerCounter,
+        timerMessage: $scope.timerMessage,
+        isTimerRunning: $scope.isTimerRunning,
+        isTimerAtBeginning: $scope.isTimerAtBeginning,
+        owner: owner
+      });
+    };
+
+    $scope.isTimerExpired = function() {
+      return $scope.timerCounter <= 0;
+    };
+
+    $scope.renewTimeout = function() {
+      timerHandle = $timeout($scope.onTimeout, 1000);
+    };
+
+    $scope.formatTime = function() {
+      if ($scope.timerCounter < 0) {
+        $scope.timerCounter = 0;
+      }
+      var mins = Math.floor($scope.timerCounter / 60);
+      var secs = $scope.timerCounter % 60;
+      if (secs < 10) {
+        secs = "0" + String(secs);
+      }
+      return mins + ":" + secs;
+    };
+
+    $scope.updateTimerDisplay = function() {
+      $scope.timerDisplay = $scope.formatTime();
+    };
+
+    $scope.startTimer = function() {
+      $scope.renewTimeout();
+      $scope.isTimerRunning = true;
+      $scope.isTimerAtBeginning = false;
+      $scope.captureTimer();
+    };
+
+    $scope.pauseTimer = function() {
+      $timeout.cancel(timerHandle);
+      $scope.isTimerRunning = false;
+      $scope.captureTimer();
+    };
+
+    $scope.resetTimer = function() {
+      $scope.pauseTimer();
+      $scope.timerCounter = DEFAULT_COUNTER;
+      $scope.updateTimerDisplay();
+      $scope.timerMessage = "";
+      $scope.isTimerAtBeginning = true;
+      $scope.captureTimer(true);
+    };
+
+    $scope.updateTimerDisplay();
+    /* END   Timer -------------- */
+});
