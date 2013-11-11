@@ -441,5 +441,45 @@ describe('Controller: MainCtrl', function () {
     scope.setShowCards();
     expect(scope.showCards).toBe(true);
   });
-  
+
+  it('should not have timer running by default', function() {
+    expect(scope.isTimerRunning).toBe(false);
+  });
+
+  it('should have timer set at beginning position', function() {
+    expect(scope.isTimerAtBeginning).toBe(true);
+  });
+
+  it('should have timer controls enabled by default', function() {
+    expect(scope.timerControlsEnabled).toBe(true);
+  });
+
+  it('should have the timer running flag on when timer is running', function() {
+    scope.startTimer();
+    expect(scope.isTimerRunning).toBe(true);
+  });
+
+  it('should have the timer running flag off when timer is paused', function() {
+    scope.startTimer();
+    scope.pauseTimer();
+    expect(scope.isTimerRunning).toBe(false);
+  });
+
+  it('should have the timer position at beginning when reset', function() {
+    scope.startTimer();
+    scope.pauseTimer();
+    scope.resetTimer();
+    expect(scope.isTimerAtBeginning).toBe(true);
+  });
+
+  it('should not have the timer position at beginning when paused', function() {
+    scope.startTimer();
+    scope.pauseTimer();
+    expect(scope.isTimerAtBeginning).toBe(false);
+  });
+
+  it('should format the timer', function() {
+    scope.timerCounter = 59;
+    expect(scope.formatTime()).toBe("0:59");
+  });
 });
