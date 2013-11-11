@@ -17,7 +17,7 @@ angular.module('firePokerApp')
     var URL = 'https://pzfqrq7kjy.firebaseio.com';
 
     // Initialize Firebase
-	/*global Firebase*/
+    /*global Firebase*/
     var ref = new Firebase(URL);
 
     // UUID generator
