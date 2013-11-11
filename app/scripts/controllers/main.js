@@ -17,6 +17,7 @@ angular.module('firePokerApp')
     var URL = 'https://pzfqrq7kjy.firebaseio.com';
 
     // Initialize Firebase
+    /*global Firebase*/
     var ref = new Firebase(URL);
 
     // UUID generator
@@ -24,11 +25,11 @@ angular.module('firePokerApp')
     var s4 = function() {
       return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     };
-    
+
     var guid = function() {
       return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     };
-    
+
     // Load cookies
     $scope.fp = $cookieStore.get('fp');
     if (!$scope.fp) {
@@ -62,7 +63,7 @@ angular.module('firePokerApp')
         $location.replace();
       }
     };
-    
+
     // Redirect to set fullname if empty
     $scope.redirectToSetFullnameIfEmpty = function() {
       if (
@@ -140,7 +141,7 @@ angular.module('firePokerApp')
     $scope.setNewGame = function(game) {
       ref.child('/games/' + $routeParams.gid).set(game);
     };
-    
+
     // Create story
     $scope.createStory = function(type) {
       if (type === 'structured') {
@@ -311,11 +312,11 @@ angular.module('firePokerApp')
       if (!$scope.game.estimate.results || $scope.game.estimate.results.length === 0) {
         $scope.disablePlayAgainAndRevealButtons = true;
       }
-    }
+    };
 
     // Show cards?
     $scope.setShowCards = function() {
-      if ($scope.game.estimate.status == 'reveal') {
+      if ($scope.game.estimate.status === 'reveal') {
         $scope.showCards = true;
       } else if (
         $scope.game.estimate &&
@@ -325,25 +326,25 @@ angular.module('firePokerApp')
       ) {
         $scope.showCards = true;
       }
-    }
+    };
 
     // Wait 1 sec before show social buttons
     $timeout(function() {
       $scope.showSocialButtons = true;
     }, 1000);
-    
+
     // Redirect with a GID to create new games
     $scope.redirectToCreateNewGame();
-    
+
     // Redirect to set fullname if empty
     $scope.redirectToSetFullnameIfEmpty();
-    
+
     // Redirect to game if fullname already set
     $scope.redirectToGameIfFullnameAlreadySet();
-    
+
     // Load game and register presence
     $scope.loadGame();
-    
+
     // Update view on game changes
     $scope.$watch('game', function(game) {
       if (!game) {
@@ -360,15 +361,15 @@ angular.module('firePokerApp')
     var timerRef = ref.child('/games/' + $routeParams.gid + '/timer');
     timerRef.on('value', function(snap) {
       var timerData = snap.val();
-      if (timerData != null) {
+      if (timerData !== null) {
         $scope.timerCounter = timerData.timerCounter;
         $scope.updateTimerDisplay();
         $scope.timerMessage = timerData.timerMessage;
         $scope.isTimerRunning = timerData.isTimerRunning;
         $scope.isTimerAtBeginning = timerData.isTimerAtBeginning;
-        var owner = timerData["owner"];
-        $scope.timerControlsEnabled = owner == null || owner.id == $scope.fp.user.id;
-        $scope.timerOwnerName = owner == null ? "" : owner.fullname;
+        var owner = timerData.owner;
+        $scope.timerControlsEnabled = owner === null || owner.id === $scope.fp.user.id;
+        $scope.timerOwnerName = owner === null ? '' : owner.fullname;
       }
     });
 
@@ -377,15 +378,15 @@ angular.module('firePokerApp')
     $scope.timerControlsEnabled = true;
     $scope.isTimerRunning = false;
     $scope.timerCounter = DEFAULT_COUNTER;
-    $scope.timerDisplay = "2:00";
-    $scope.timerMessage = "";
-    $scope.timerOwnerName = "";
-    $scope.isTimerAtBeginning = $scope.timerCounter == DEFAULT_COUNTER;
+    $scope.timerDisplay = '2:00';
+    $scope.timerMessage = '';
+    $scope.timerOwnerName = '';
+    $scope.isTimerAtBeginning = $scope.timerCounter === DEFAULT_COUNTER;
 
     $scope.onTimeout = function() {
       $scope.decrementTimer();
       if ($scope.isTimerExpired()) {
-        $scope.timerMessage = "Time is up!";
+        $scope.timerMessage = 'Time is up!';
         $scope.isTimerRunning = false;
         $scope.captureTimer(true);
       } else {
@@ -396,7 +397,7 @@ angular.module('firePokerApp')
     $scope.decrementTimer = function() {
       $scope.timerCounter--;
       if ($scope.timerCounter >= 0) {
-      $scope.updateTimerDisplay();
+        $scope.updateTimerDisplay();
       }
       $scope.captureTimer();
     };
@@ -427,9 +428,9 @@ angular.module('firePokerApp')
       var mins = Math.floor($scope.timerCounter / 60);
       var secs = $scope.timerCounter % 60;
       if (secs < 10) {
-        secs = "0" + String(secs);
+        secs = '0' + String(secs);
       }
-      return mins + ":" + secs;
+      return mins + ':' + secs;
     };
 
     $scope.updateTimerDisplay = function() {
@@ -453,11 +454,12 @@ angular.module('firePokerApp')
       $scope.pauseTimer();
       $scope.timerCounter = DEFAULT_COUNTER;
       $scope.updateTimerDisplay();
-      $scope.timerMessage = "";
+      $scope.timerMessage = '';
       $scope.isTimerAtBeginning = true;
       $scope.captureTimer(true);
     };
 
     $scope.updateTimerDisplay();
     /* END   Timer -------------- */
-});
+
+  });
