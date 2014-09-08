@@ -156,6 +156,7 @@ angular.module('firePokerApp')
         delete $scope.newStory.iWouldLikeTo;
         delete $scope.newStory.soThat;
       }
+      $scope.showCardDeck = true;
       $scope.newStory.results = false;
       $scope.newStory.points = 0;
       $scope.newStory.status = 'queue';
@@ -181,6 +182,7 @@ angular.module('firePokerApp')
       $scope.game.estimate.id = index;
       $scope.game.estimate.startedAt = new Date().getTime();
       $scope.game.estimate.endedAt = false;
+      $scope.showCardDeck = true;
     };
 
     // Delete story
