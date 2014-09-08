@@ -1,7 +1,19 @@
 /* Will be compiled down to a single stylesheet with your sass files */
 
 body {
-  padding-top: 70px;
+  margin-top: 2em;
+  margin-bottom: 10em;
+  background-image: (images/icon_23936.png);
+}
+
+.logo {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 3em;
+}
+
+.lead {
+  margin-top: 1em;
+  font-size: 1.2em;
 }
 
 .tab-content {
@@ -50,11 +62,11 @@ body {
 }
 
 .gb-btn {
-  margin-top:10px;
+  margin-top:1em;
 }
 
 .vspace {
-  margin-top:60px;
+  margin-top:2em;
 }
 
 span[contenteditable=true] {
@@ -79,11 +91,6 @@ span[contenteditable=true] {
 	margin-top:200px;
 }
 
-div.logo {
-	font-size: 35px;
-	font-weight: bold;
-}
-
 .timer-display {
   letter-spacing: 2px;
   font-size: 72px;
@@ -94,4 +101,8 @@ div.logo {
   font-size: 36px;
   font-weight: bold;
   color: #d9534f;
+}
+
+.social-buttons {
+  height: 40px;
 }
