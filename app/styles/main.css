@@ -104,5 +104,6 @@ span[contenteditable=true] {
 }
 
 .social-buttons {
+  margin-top: 5em;
   height: 40px;
 }
