@@ -14,9 +14,8 @@ files = [
   'app/scripts/**/*.js',
   'test/mock/**/*.js',
   'test/spec/**/*.js',
-  'https://cdn.firebase.com/v0/firebase.js',
-  'https://cdn.firebase.com/libs/angularfire/0.3.0/angularfire.min.js',
-  'app/components/angular-contenteditable/angular-contenteditable.js'
+  'app/components/firebase/firebase.js',
+  'app/components//angularfire/angularfire.js'
 ];
 
 // list of files to exclude

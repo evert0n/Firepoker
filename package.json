@@ -26,7 +26,6 @@
     "grunt-google-cdn": "~0.1.1",
     "grunt-ngmin": "~0.0.2",
     "grunt-shell": "~1.1.1",
-    "grunt-build-gh-pages": "~1.0.3",
     "grunt-gh-pages": "~0.9.1"
   },
   "engines": {
