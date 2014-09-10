@@ -8,22 +8,34 @@ angular.module('contenteditable', [])
   .directive('contenteditable', ['$timeout', function($timeout) { return {
     restrict: 'A',
     require: '?ngModel',
-    link: function($scope, $element, attrs, ngModel) {
+    link: function(scope, element, attrs, ngModel) {
       // don't do anything unless this is actually bound to a model
       if (!ngModel) {
         return
       }
 
+      // options
+      var opts = {}
+      angular.forEach([
+        'stripBr',
+        'noLineBreaks',
+        'selectNonEditable',
+        'moveCaretToEndOnChange',
+      ], function(opt) {
+        var o = attrs[opt]
+        opts[opt] = o && o !== 'false'
+      })
+
       // view -> model
-      $element.bind('input', function(e) {
-        $scope.$apply(function() {
+      element.bind('input', function(e) {
+        scope.$apply(function() {
           var html, html2, rerender
-          html = $element.html()
+          html = element.html()
           rerender = false
-          if (attrs.stripBr && attrs.stripBr !== "false") {
+          if (opts.stripBr) {
             html = html.replace(/<br>$/, '')
           }
-          if (attrs.noLineBreaks && attrs.noLineBreaks !== "false") {
+          if (opts.noLineBreaks) {
             html2 = html.replace(/<div>/g, '').replace(/<br>/g, '').replace(/<\/div>/g, '')
             if (html2 !== html) {
               rerender = true
@@ -38,8 +50,8 @@ angular.module('contenteditable', [])
             // the cursor disappears if the contents is empty
             // so we need to refocus
             $timeout(function(){
-              $element.blur()
-              $element.focus()
+              element[0].blur()
+              element[0].focus()
             })
           }
         })
@@ -52,22 +64,24 @@ angular.module('contenteditable', [])
         if (!!oldRender) {
           oldRender()
         }
-        $element.html(ngModel.$viewValue || '')
-        el = $element.get(0)
-        range = document.createRange()
-        sel = window.getSelection()
-        if (el.childNodes.length > 0) {
-          el2 = el.childNodes[el.childNodes.length - 1]
-          range.setStartAfter(el2)
-        } else {
-          range.setStartAfter(el)
+        element.html(ngModel.$viewValue || '')
+        if (opts.moveCaretToEndOnChange) {
+          el = element[0]
+          range = document.createRange()
+          sel = window.getSelection()
+          if (el.childNodes.length > 0) {
+            el2 = el.childNodes[el.childNodes.length - 1]
+            range.setStartAfter(el2)
+          } else {
+            range.setStartAfter(el)
+          }
+          range.collapse(true)
+          sel.removeAllRanges()
+          sel.addRange(range)
         }
-        range.collapse(true)
-        sel.removeAllRanges()
-        sel.addRange(range)
       }
-      if (attrs.selectNonEditable && attrs.selectNonEditable !== "false") {
-        $element.click(function(e) {
+      if (opts.selectNonEditable) {
+        element.bind('click', function(e) {
           var range, sel, target
           target = e.toElement
           if (target !== this && angular.element(target).attr('contenteditable') === 'false') {

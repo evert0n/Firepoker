@@ -59,12 +59,12 @@
     <!-- Show info message if no active story -->
     <div ng-show="!game.estimate" class="alert alert-info">
       <span class="glyphicon glyphicon-exclamation-sign"></span>
-      <strong>Hi {{fp.user.fullname}}!</strong> 
+      <strong>Hi {{fp.user.fullname}}!</strong>
       <span ng-hide="isOwner">Wait a new round start.</span>
       <span ng-show="isOwner">Add or select a story to start a new round.</span>
     </div>
     <!-- Create story -->
-    <div ng-show="showAddStory">
+    <div ng-show="isOwner">
       <ul class="nav nav-tabs">
         <li><a href="#free-form" data-toggle="tab">Free-form</a></li>
         <li class="active"><a href="#structured" data-toggle="tab">Structured</a></li>
@@ -127,6 +127,9 @@
         </div>
       </div>
     </div>
+    <div class="vspace">
+      <p class="lead">Project built with <a href="http://www.angularjs.org/" target="_blank">AngularJS</a> and <a href="http://www.firebase.com" target="_blank">Firebase</a> at <a href="http://www.wizehive.com/" target="_blank">WizeHive</a>.</p>
+    </div>
   </div>
   <div class="col-md-4">
     <div class="affix">
@@ -134,7 +137,7 @@
         <h5>Participants ({{totalOfOnlineParticipants()}})</h5>
         <ul class="list-unstyled">
           <li ng-repeat="participant in game.participants" ng-show="participant.online == true">
-            {{participant.fullname}} 
+            {{participant.fullname}}
             <span ng-show="participant.id == game.owner.id">(moderator)</span>
           </li>
         </ul>
@@ -142,6 +145,17 @@
       <div class="vspace">
         <h5>Share this game</h5>
         <p>Copy the address in your browser and share with team members.</p>
+      </div>
+      <div class="vspace">
+        <h5>Discussion Timer</h5>
+        <div ng-hide="timerMessage != ''" class="timer-display">{{timerDisplay}}</div>
+        <div ng-show="timerMessage != ''" class="timer-message">{{timerMessage}}</div>
+        <div ng-show="timerControlsEnabled" class="timer-controls">
+          <button ng-hide="isTimerRunning || isTimerExpired()" ng-click="startTimer()" class="btn btn-default">Start Timer</button>
+          <button ng-show="isTimerRunning" ng-click="pauseTimer()" class="btn btn-default">Pause</button>
+          <button ng-hide="isTimerRunning || isTimerAtBeginning" ng-click="resetTimer()" class="btn btn-default">Reset</button>
+        </div>
+        <div ng-hide="timerControlsEnabled" class="timer-owner">Timer started by {{timerOwnerName}}</div>
       </div>
     </div>
   </div>
