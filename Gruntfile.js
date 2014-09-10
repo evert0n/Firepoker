@@ -257,15 +257,8 @@ module.exports = function (grunt) {
         }]
       }
     },
-    githubPages: {
-      last: {
-        options: {
-          // The default commit message for the gh-pages branch
-          commitMessage: 'release'
-        },
-        // The folder where your gh-pages repo is
-        src: 'dist'
-      }
+    buildGhPages: {
+      ghPages: {},
     }
   });
 
@@ -310,6 +303,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['build']);
 
-  grunt.registerTask('deploy', ['githubPages:last']);
+  grunt.registerTask('deploy', ['buildGhPages']);
 
 };
