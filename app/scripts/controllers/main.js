@@ -184,16 +184,6 @@ angular.module('firePokerApp')
       $scope.showCardDeck = true;
     };
 
-    // Set unestimated stories count
-    $scope.setUnestimatedStoryCount = function() {
-      $scope.unestimatedStoriesCount = 0;
-      angular.forEach($scope.game.stories, function(story) {
-        if (story.status === 'queue') {
-          $scope.unestimatedStoriesCount++;
-        }
-      });
-    };
-
     // Delete story
     $scope.deleteStory = function(index) {
       $scope.game.stories.splice(index, 1);
@@ -344,6 +334,16 @@ angular.module('firePokerApp')
       }
     };
 
+    // Set unestimated stories count
+    $scope.setUnestimatedStoryCount = function() {
+      $scope.unestimatedStoriesCount = 0;
+      angular.forEach($scope.game.stories, function(story) {
+        if (story.status === 'queue') {
+          $scope.unestimatedStoriesCount++;
+        }
+      });
+    };
+
     // Wait 1 sec before show social buttons
     $timeout(function() {
       $scope.showSocialButtons = true;
@@ -371,6 +371,7 @@ angular.module('firePokerApp')
       $scope.setNewEstimate();
       $scope.setDisablePlayAgainAndRevealButtons();
       $scope.setShowCards();
+      $scope.setUnestimatedStoryCount();
     });
 
     /* BEGIN Timer -------------- */
