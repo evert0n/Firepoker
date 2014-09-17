@@ -15,7 +15,7 @@ files = [
   'test/mock/**/*.js',
   'test/spec/**/*.js',
   'app/components/firebase/firebase.js',
-  'app/components//angularfire/angularfire.js'
+  'app/components/angularfire/angularFire.js'
 ];
 
 // list of files to exclude
