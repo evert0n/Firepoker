@@ -52,7 +52,7 @@
           <button type="submit" class="btn btn-success" ng-click="acceptRound()">Accept round</button>
           <button type="submit" class="btn btn-primary" ng-click="playAgain()" ng-disabled="disablePlayAgainAndRevealButtons">Play again</button>
           <button type="submit" class="btn btn-primary" ng-click="revealCards()" ng-disabled="disablePlayAgainAndRevealButtons">Reveal cards</button>
-          <button type="submit" class="btn btn-primary" ng-click="resetRound()">Reset round</button>
+          <button type="submit" class="btn btn-primary" ng-click="cancelRound()">Cancel round</button>
         </form>
       </div>
     </div>
@@ -110,7 +110,7 @@
         </div>
         <div class="tab-pane" id="story-list">
           <div ng-show="game.stories">
-            <ul ng-show="game.stories" class="list-unstyled">
+            <ul ng-show="unestimatedStoriesCount" class="list-unstyled">
               <li ng-repeat="story in game.stories" ng-show="story.status == 'queue'">
                 <div class="pull-right">
                   <a href="" ng-click="deleteStory($index)"><span class="glyphicon glyphicon-trash"></span></a>
@@ -121,14 +121,14 @@
               </li>
             </ul>
           </div>
-          <div ng-hide="game.stories">
+          <div ng-hide="unestimatedStoriesCount">
             <p>You have no stories.</p>
           </div>
         </div>
       </div>
     </div>
     <div class="vspace">
-      <p class="lead">Project built with <a href="http://www.angularjs.org/" target="_blank">AngularJS</a> and <a href="http://www.firebase.com" target="_blank">Firebase</a> at <a href="http://www.wizehive.com/" target="_blank">WizeHive</a>.</p>
+      <p>Project built with <a href="http://www.firebase.com" target="_blank">Firebase</a> and <a href="http://www.angularjs.org/" target="_blank">AngularJS</a> at <a href="http://www.wizehive.com/" target="_blank">WizeHive</a>.</p>
     </div>
   </div>
   <div class="col-md-4">
