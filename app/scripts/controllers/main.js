@@ -175,7 +175,7 @@ angular.module('firePokerApp')
 
     // Set story
     $scope.setStory = function(index) {
-      $scope.resetRound();
+      $scope.cancelRound();
       $scope.game.estimate = $scope.game.stories[index];
       $scope.game.estimate.status = 'active';
       $scope.game.estimate.id = index;
@@ -247,8 +247,8 @@ angular.module('firePokerApp')
       $scope.game.estimate.status = 'active';
     };
 
-    // Reset round
-    $scope.resetRound = function() {
+    // Cancel round
+    $scope.cancelRound = function() {
       if ($scope.game.estimate) {
         var idx = $scope.game.estimate.id;
         $scope.game.stories[idx].startedAt = false;
@@ -278,6 +278,7 @@ angular.module('firePokerApp')
 
     // Set card deck visibility
     $scope.setShowCardDeck = function() {
+      $scope.showCardDeck = true;
       if ($scope.game.estimate && $scope.game.estimate.results) {
         angular.forEach($scope.game.estimate.results, function(result) {
           if (
@@ -294,6 +295,7 @@ angular.module('firePokerApp')
 
     // Set estimation form visibility
     $scope.setShowSelectEstimate = function() {
+      $scope.showSelectEstimate = false;
       if (
         $scope.game.estimate &&
         $scope.game.owner &&
@@ -312,11 +314,14 @@ angular.module('firePokerApp')
     $scope.setDisablePlayAgainAndRevealButtons = function() {
       if (!$scope.game.estimate.results || $scope.game.estimate.results.length === 0) {
         $scope.disablePlayAgainAndRevealButtons = true;
+      } else {
+        $scope.disablePlayAgainAndRevealButtons = false;
       }
     };
 
     // Show cards?
     $scope.setShowCards = function() {
+      $scope.showCards = false;
       if ($scope.game.estimate.status === 'reveal') {
         $scope.showCards = true;
       } else if (
