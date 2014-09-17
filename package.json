@@ -1,6 +1,6 @@
 {
   "name": "firepoker",
-  "version": "0.0.110",
+  "version": "0.0.111",
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",
