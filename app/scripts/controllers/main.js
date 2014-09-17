@@ -3,12 +3,11 @@
 /**
  * MainCtrl
  *
- * @fileoverview FirePoker.io is a monolithic well tested app, so for now all it's
- *  logic is on this single controller, in the future we could be splitting the logic
- *  into diff files and modules.
- * @version 0.3.0
+ * FirePoker.io is a monolithic well tested app, so for now all it's
+ * logic is on this single controller, in the future we could be splitting the logic
+ * into diff files and modules.
+ *
  * @author Everton Yoshitani <everton@wizehive.com>
- * @todo add remain unit tests and perfect after learn' more about testing
  */
 angular.module('firePokerApp')
   .controller('MainCtrl', function ($rootScope, $scope, $cookieStore, $location, $routeParams, $timeout, angularFire) {
@@ -176,7 +175,7 @@ angular.module('firePokerApp')
 
     // Set story
     $scope.setStory = function(index) {
-      $scope.resetRound();
+      $scope.cancelRound();
       $scope.game.estimate = $scope.game.stories[index];
       $scope.game.estimate.status = 'active';
       $scope.game.estimate.id = index;
@@ -248,8 +247,8 @@ angular.module('firePokerApp')
       $scope.game.estimate.status = 'active';
     };
 
-    // Reset round
-    $scope.resetRound = function() {
+    // Cancel round
+    $scope.cancelRound = function() {
       if ($scope.game.estimate) {
         var idx = $scope.game.estimate.id;
         $scope.game.stories[idx].startedAt = false;
@@ -279,6 +278,7 @@ angular.module('firePokerApp')
 
     // Set card deck visibility
     $scope.setShowCardDeck = function() {
+      $scope.showCardDeck = true;
       if ($scope.game.estimate && $scope.game.estimate.results) {
         angular.forEach($scope.game.estimate.results, function(result) {
           if (
@@ -295,6 +295,7 @@ angular.module('firePokerApp')
 
     // Set estimation form visibility
     $scope.setShowSelectEstimate = function() {
+      $scope.showSelectEstimate = false;
       if (
         $scope.game.estimate &&
         $scope.game.owner &&
@@ -313,11 +314,14 @@ angular.module('firePokerApp')
     $scope.setDisablePlayAgainAndRevealButtons = function() {
       if (!$scope.game.estimate.results || $scope.game.estimate.results.length === 0) {
         $scope.disablePlayAgainAndRevealButtons = true;
+      } else {
+        $scope.disablePlayAgainAndRevealButtons = false;
       }
     };
 
     // Show cards?
     $scope.setShowCards = function() {
+      $scope.showCards = false;
       if ($scope.game.estimate.status === 'reveal') {
         $scope.showCards = true;
       } else if (
@@ -328,6 +332,16 @@ angular.module('firePokerApp')
       ) {
         $scope.showCards = true;
       }
+    };
+
+    // Set unestimated stories count
+    $scope.setUnestimatedStoryCount = function() {
+      $scope.unestimatedStoriesCount = 0;
+      angular.forEach($scope.game.stories, function(story) {
+        if (story.status === 'queue') {
+          $scope.unestimatedStoriesCount++;
+        }
+      });
     };
 
     // Wait 1 sec before show social buttons
@@ -357,111 +371,7 @@ angular.module('firePokerApp')
       $scope.setNewEstimate();
       $scope.setDisablePlayAgainAndRevealButtons();
       $scope.setShowCards();
+      $scope.setUnestimatedStoryCount();
     });
-
-    /* BEGIN Timer -------------- */
-    var timerRef = ref.child('/games/' + $routeParams.gid + '/timer');
-    timerRef.on('value', function(snap) {
-      var timerData = snap.val();
-      if (timerData !== null) {
-        $scope.timerCounter = timerData.timerCounter;
-        $scope.updateTimerDisplay();
-        $scope.timerMessage = timerData.timerMessage;
-        $scope.isTimerRunning = timerData.isTimerRunning;
-        $scope.isTimerAtBeginning = timerData.isTimerAtBeginning;
-        var owner = timerData.owner;
-        $scope.timerControlsEnabled = owner === null || owner.id === $scope.fp.user.id;
-        $scope.timerOwnerName = owner === null ? '' : owner.fullname;
-      }
-    });
-
-    var timerHandle;
-    var DEFAULT_COUNTER = 120;
-    $scope.timerControlsEnabled = true;
-    $scope.isTimerRunning = false;
-    $scope.timerCounter = DEFAULT_COUNTER;
-    $scope.timerDisplay = '2:00';
-    $scope.timerMessage = '';
-    $scope.timerOwnerName = '';
-    $scope.isTimerAtBeginning = $scope.timerCounter === DEFAULT_COUNTER;
-
-    $scope.onTimeout = function() {
-      $scope.decrementTimer();
-      if ($scope.isTimerExpired()) {
-        $scope.timerMessage = 'Time is up!';
-        $scope.isTimerRunning = false;
-        $scope.captureTimer(true);
-      } else {
-        $scope.renewTimeout();
-      }
-    };
-
-    $scope.decrementTimer = function() {
-      $scope.timerCounter--;
-      if ($scope.timerCounter >= 0) {
-        $scope.updateTimerDisplay();
-      }
-      $scope.captureTimer();
-    };
-
-    $scope.captureTimer = function(resetOwner) {
-      var owner = resetOwner ? null : $scope.fp.user;
-      timerRef.set({
-        timerCounter: $scope.timerCounter,
-        timerMessage: $scope.timerMessage,
-        isTimerRunning: $scope.isTimerRunning,
-        isTimerAtBeginning: $scope.isTimerAtBeginning,
-        owner: owner
-      });
-    };
-
-    $scope.isTimerExpired = function() {
-      return $scope.timerCounter <= 0;
-    };
-
-    $scope.renewTimeout = function() {
-      timerHandle = $timeout($scope.onTimeout, 1000);
-    };
-
-    $scope.formatTime = function() {
-      if ($scope.timerCounter < 0) {
-        $scope.timerCounter = 0;
-      }
-      var mins = Math.floor($scope.timerCounter / 60);
-      var secs = $scope.timerCounter % 60;
-      if (secs < 10) {
-        secs = '0' + String(secs);
-      }
-      return mins + ':' + secs;
-    };
-
-    $scope.updateTimerDisplay = function() {
-      $scope.timerDisplay = $scope.formatTime();
-    };
-
-    $scope.startTimer = function() {
-      $scope.renewTimeout();
-      $scope.isTimerRunning = true;
-      $scope.isTimerAtBeginning = false;
-      $scope.captureTimer();
-    };
-
-    $scope.pauseTimer = function() {
-      $timeout.cancel(timerHandle);
-      $scope.isTimerRunning = false;
-      $scope.captureTimer();
-    };
-
-    $scope.resetTimer = function() {
-      $scope.pauseTimer();
-      $scope.timerCounter = DEFAULT_COUNTER;
-      $scope.updateTimerDisplay();
-      $scope.timerMessage = '';
-      $scope.isTimerAtBeginning = true;
-      $scope.captureTimer(true);
-    };
-
-    $scope.updateTimerDisplay();
-    /* END   Timer -------------- */
 
   });

@@ -1,7 +1,7 @@
 FirePoker [![Build Status](https://travis-ci.org/Wizehive/Firepoker.png?branch=master)](https://travis-ci.org/Wizehive/Firepoker) [![Code Climate](https://codeclimate.com/repos/526ef669c7f3a379a5003de1/badges/1773409c898901ed22c7/gpa.png)](https://codeclimate.com/repos/526ef669c7f3a379a5003de1/feed)
 =========
 
-Agile Planning Poker® powered by AngularJS and Firebase
+Agile Planning Poker® powered by Firebase and AngularJS
 
 [http://FirePoker.io](http://FirePoker.io)
 
@@ -30,5 +30,7 @@ Legal and License
 =========
 
 Planning Poker® is a registered trademark of [Mountain Goat Software, LLC](http://www.mountaingoatsoftware.com/).
+
+Icon designed by XOXO - http://thenounproject.com/xoxo/
 
 FirePoker is released under the MIT license.

@@ -14,9 +14,9 @@ module.exports = function (grunt) {
     dist: 'dist'
   };
 
-  try {
-    yeomanConfig.app = require('./component.json').appPath || yeomanConfig.app;
-  } catch (e) {}
+  // try {
+  //   yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app;
+  // } catch (e) {}
 
   grunt.initConfig({
     yeoman: yeomanConfig,
@@ -256,6 +256,12 @@ module.exports = function (grunt) {
           ]
         }]
       }
+    },
+    'gh-pages': {
+      options: {
+        base: 'dist'
+      },
+      src: ['**']
     }
   });
 
@@ -299,4 +305,5 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('default', ['build']);
+
 };
