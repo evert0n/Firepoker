@@ -1,9 +1,9 @@
-FirePoker [![Build Status](https://travis-ci.org/Wizehive/Firepoker.png?branch=master)](https://travis-ci.org/Wizehive/Firepoker) [![Code Climate](https://codeclimate.com/repos/526ef669c7f3a379a5003de1/badges/1773409c898901ed22c7/gpa.png)](https://codeclimate.com/repos/526ef669c7f3a379a5003de1/feed)
+Firepoker [![Build Status](https://travis-ci.org/Wizehive/Firepoker.png?branch=master)](https://travis-ci.org/Wizehive/Firepoker) [![Code Climate](https://codeclimate.com/repos/526ef669c7f3a379a5003de1/badges/1773409c898901ed22c7/gpa.png)](https://codeclimate.com/repos/526ef669c7f3a379a5003de1/feed)
 =========
 
 Agile Planning Poker® powered by Firebase and AngularJS
 
-[http://FirePoker.io](http://FirePoker.io)
+[http://Firepoker.io](http://Firepoker.io)
 
 Planning Poker®, also called Scrum poker, is a consensus-based technique for estimating, mostly used to estimate effort or relative size of user stories in software development. In Planning Poker®, members of the group make estimates by playing numbered cards face-down to the table, instead of speaking them aloud. The cards are revealed, and the estimates are then discussed. By hiding the figures in this way, the group can avoid the cognitive bias of anchoring, where the first number spoken aloud sets a precedent for subsequent estimates.
 
@@ -31,6 +31,6 @@ Legal and License
 
 Planning Poker® is a registered trademark of [Mountain Goat Software, LLC](http://www.mountaingoatsoftware.com/).
 
-Icon designed by XOXO - http://thenounproject.com/xoxo/
+Icon designed by [XOXO](http://thenounproject.com/xoxo/)
 
 FirePoker is released under the MIT license.
