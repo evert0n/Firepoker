@@ -344,6 +344,13 @@ angular.module('firePokerApp')
       });
     };
 
+    // Logout
+    $scope.logout = function() {
+      $cookieStore.remove('fp');
+      $location.path('/');
+      $location.replace();
+    };
+
     // Wait 1 sec before show social buttons
     $timeout(function() {
       $scope.showSocialButtons = true;
