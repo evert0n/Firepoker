@@ -7,7 +7,7 @@ before_script:
  - sh -e /etc/init.d/xvfb start
  - npm install -g grunt-cli@0.1.x
  - npm install --quiet
- - rm -rf /home/travis/.bower/cache/
+ - bower cache clean
  - bower install --verbose
 
 script: grunt karma:unit
