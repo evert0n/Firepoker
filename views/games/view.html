@@ -1,8 +1,5 @@
 <div class="row" ng-show="game">
   <div class="col-md-8">
-    <!-- Game -->
-    <h4>{{game.name}}</h4>
-    <p>{{game.description}}</p>
     <!-- Estimated stories -->
     <div ng-repeat="story in game.stories" class="stories">
       <div ng-show="story.status == 'closed'" class="bordered">
@@ -18,8 +15,8 @@
         <p class="text-right">
           <span class="label label-success">CURRENT</span>
         </p>
-        <h5><span ng-model="game.estimate.title" no-line-breaks="true">{{game.estimate.title}}</span></h5>
-        <p><span ng-model="game.estimate.notes">{{game.estimate.notes}}</span></p>
+        <h5><span ng-model="game.estimate.title" contenteditable="true" no-line-breaks="true">{{game.estimate.title}}</span></h5>
+        <p><span ng-model="game.estimate.notes" contenteditable="true">{{game.estimate.notes}}</span></p>
       </div>
       <!-- Estimates -->
       <div class="well">
@@ -31,7 +28,7 @@
             <li ng-repeat="result in game.estimate.results">
               <div ng-show="showCards || result.user.id == fp.user.id" class="card text-center" href="#">{{result.points}}</div>
               <div ng-hide="showCards || result.user.id == fp.user.id" class="card card-facedown">&nbsp;</div>
-              <p class="text-center">{{result.user.fullname}}</p>
+              <p class="text-center">{{result.user.fullname | characters:8}}</p>
             </li>
           </ul>
         </div>
@@ -133,11 +130,27 @@
   </div>
   <div class="col-md-4">
     <div class="affix">
+      <div class="btn-group pull-right">
+        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+          <span class="glyphicon glyphicon-cog"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="#">Action</a></li>
+          <li><a href="#">Another action</a></li>
+          <li><a href="#">Something else here</a></li>
+          <li class="divider"></li>
+          <li><a href="#" ng-click="logout()">Logout</a></li>
+        </ul>
+      </div>
       <div>
+        <h4>{{game.name}}</h4>
+        <p>{{game.description}}</p>
+      </div>
+      <div class="vspace">
         <h5>Participants ({{totalOfOnlineParticipants()}})</h5>
         <ul class="list-unstyled">
           <li ng-repeat="participant in game.participants" ng-show="participant.online == true">
-            {{participant.fullname}}
+            {{participant.fullname | characters:25}}
             <span ng-show="participant.id == game.owner.id">(moderator)</span>
           </li>
         </ul>
