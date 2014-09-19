@@ -16,8 +16,8 @@
         <p class="text-right">
           <span class="label label-success">CURRENT</span>
         </p>
-        <h5><span ng-model="game.estimate.title" no-line-breaks="true">{{game.estimate.title}}</span></h5>
-        <p><span ng-model="game.estimate.notes">{{game.estimate.notes}}</span></p>
+        <h5><span ng-model="game.estimate.title" contenteditable="true" no-line-breaks="true">{{game.estimate.title}}</span></h5>
+        <p><span ng-model="game.estimate.notes" contenteditable="true">{{game.estimate.notes}}</span></p>
       </div>
       <!-- Estimates -->
       <div class="well">
@@ -132,7 +132,7 @@
   <div class="col-md-4">
     <div class="affix">
       <div class="btn-group pull-right">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
           <span class="glyphicon glyphicon-cog"></span>
         </button>
         <ul class="dropdown-menu" role="menu">

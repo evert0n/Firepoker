@@ -3,7 +3,6 @@
 body {
   margin-top: 1em;
   margin-bottom: 10em;
-  background-image: url(images/icon_23936.png);
 }
 
 .logo {
@@ -106,4 +105,24 @@ span[contenteditable=true] {
 .social-buttons {
   margin-top: 5em;
   height: 40px;
+}
+
+div[contenteditable='true'],
+span[contenteditable='true'] {
+  padding: .5em;
+  border-radius: 3px;
+  outline: none;
+  border: 2px solid transparent;
+}
+
+div[contenteditable='true']:hover,
+span[contenteditable='true']:hover {
+  background: #f5f5f5;
+}
+
+div:focus, div:focus:hover,
+span:focus, span:focus:hover {
+  background: #ffffff;
+  border-color: #69c773;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.15) inset;
 }
