@@ -2,7 +2,7 @@
 <div class="row" ng-show="game">
   <div class="col-md-8">
     <!-- Estimated stories -->
-    <div ng-repeat="story in game.stories" class="stories">
+    <div ng-repeat="story in game.stories | orderBy:'endedAt'" class="stories">
       <div ng-show="story.status == 'closed'" class="bordered">
         <p class="text-right">Estimated: <span class="label label-danger">{{story.points || 0}}</span></p>
         <h5>{{story.title}}</h5>
