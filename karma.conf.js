@@ -10,10 +10,9 @@ files = [
   'app/components/angular/angular.js',
   'app/components/angular-mocks/angular-mocks.js',
   'app/components/angular-cookies/angular-cookies.js',
-  'app/components/angular-truncate/src/truncate.js',
   'app/scripts/*.js',
   'app/scripts/**/*.js',
-  'test/mock/**/*.js',
+  // 'test/mock/**/*.js',
   'test/spec/**/*.js',
   'app/components/firebase/firebase.js',
   'app/components/angularfire/angularFire.js'
@@ -50,7 +49,7 @@ autoWatch = false;
 // - Safari (only Mac)
 // - PhantomJS
 // - IE (only Windows)
-browsers = ['Firefox'];
+browsers = ['Chrome'];
 
 // If browser does not capture in given timeout [ms], kill it
 captureTimeout = 5000;
