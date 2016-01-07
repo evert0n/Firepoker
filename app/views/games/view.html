@@ -5,8 +5,8 @@
     <div ng-repeat="story in game.stories | orderBy:'endedAt'" class="stories">
       <div ng-show="story.status == 'closed'" class="bordered">
         <p class="text-right">Estimated: <span class="label label-danger">{{story.points || 0}}</span></p>
-        <h5>{{story.title}}</h5>
-        <p>{{story.notes}}</p>
+        <h5 ng-bind-html-unsafe="story.title"></h5>
+        <p ng-bind-html-unsafe="store.notes"></p>
       </div>
     </div>
     <!-- Estimate story -->
