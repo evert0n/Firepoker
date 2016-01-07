@@ -51,9 +51,9 @@ autoWatch = false;
 // - IE (only Windows)
 
 if (process.env.TRAVIS) {
-  browsers = ['Chrome'];
-} else {
   browsers = ['Firefox'];
+} else {
+  browsers = ['Chrome'];
 }
 
 // If browser does not capture in given timeout [ms], kill it
