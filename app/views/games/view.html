@@ -45,7 +45,8 @@
         <form class="form-inline" role="form">
           <div class="form-group col-md-2">
             <label class="sr-only" for="estimate-points">Estimate</label>
-            <input ng-model="newEstimate.points" type="number" class="form-control input-small" id="estimate-points">
+            <input ng-show="showCards" ng-model="newEstimate.points" type="number" class="form-control input-small" id="estimate-points">
+            <input ng-hide="showCards" value="?" type="text" disabled class="form-control input-small" id="estimate-points">
           </div>
           <button type="submit" class="btn btn-success" ng-click="acceptRound()">Accept round</button>
           <button type="submit" class="btn btn-primary" ng-click="playAgain()" ng-disabled="disablePlayAgainAndRevealButtons">Play again</button>
