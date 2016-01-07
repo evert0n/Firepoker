@@ -11,8 +11,7 @@
     "bootstrap": "3.0.3",
     "angularfire": "0.3.0",
     "firebase": "1.0.1",
-    "firebase-simple-login": "1.0.1",
-    "angular-truncate": "*"
+    "firebase-simple-login": "1.0.1"
   },
   "devDependencies": {
     "angular-mocks": "1.0.8",

@@ -26,10 +26,10 @@
         </div>
         <div ng-show="game.estimate.results">
           <ul class="list-inline">
-            <li ng-repeat="result in game.estimate.results">
+            <li ng-repeat="result in game.estimate.results" class="list-item">
               <div ng-show="showCards || result.user.id == fp.user.id" class="card text-center" href="#">{{result.points}}</div>
               <div ng-hide="showCards || result.user.id == fp.user.id" class="card card-facedown">&nbsp;</div>
-              <p class="text-center">{{result.user.fullname | characters:8}}</p>
+              <p class="text-center truncate">{{result.user.fullname}}</p>
             </li>
           </ul>
         </div>
@@ -153,7 +153,7 @@
         <h5>Participants ({{totalOfOnlineParticipants()}})</h5>
         <ul class="list-unstyled">
           <li ng-repeat="participant in game.participants" ng-show="participant.online == true">
-            {{participant.fullname | characters:25}}
+            {{participant.fullname}}
             <span ng-show="participant.id == game.owner.id">(moderator)</span>
           </li>
         </ul>
