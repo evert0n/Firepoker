@@ -49,7 +49,12 @@ autoWatch = false;
 // - Safari (only Mac)
 // - PhantomJS
 // - IE (only Windows)
-browsers = ['Chrome'];
+
+if (process.env.TRAVIS) {
+  browsers = ['Chrome'];
+} else {
+  browsers = ['Firefox'];
+}
 
 // If browser does not capture in given timeout [ms], kill it
 captureTimeout = 5000;
