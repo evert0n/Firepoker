@@ -115,7 +115,7 @@
                 </div>
                 <a href="" ng-click="setStory($index)">{{story.title}}</a>
                 <p>{{story.notes}}</p>
-                <hr ng-show="!$last">
+                <hr ng-show="unestimatedStoriesCount > 1 && !$last">
               </li>
             </ul>
           </div>
