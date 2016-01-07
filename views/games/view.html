@@ -1,11 +1,11 @@
 <div class="row" ng-show="game">
   <div class="col-md-8">
     <!-- Estimated stories -->
-    <div ng-repeat="story in game.stories" class="stories">
+    <div ng-repeat="story in game.stories | orderBy:'endedAt'" class="stories">
       <div ng-show="story.status == 'closed'" class="bordered">
         <p class="text-right">Estimated: <span class="label label-danger">{{story.points || 0}}</span></p>
-        <h5>{{story.title}}</h5>
-        <p>{{story.notes}}</p>
+        <h5 ng-bind-html-unsafe="story.title"></h5>
+        <p ng-bind-html-unsafe="store.notes"></p>
       </div>
     </div>
     <!-- Estimate story -->
@@ -25,10 +25,10 @@
         </div>
         <div ng-show="game.estimate.results">
           <ul class="list-inline">
-            <li ng-repeat="result in game.estimate.results">
+            <li ng-repeat="result in game.estimate.results" class="list-item">
               <div ng-show="showCards || result.user.id == fp.user.id" class="card text-center" href="#">{{result.points}}</div>
               <div ng-hide="showCards || result.user.id == fp.user.id" class="card card-facedown">&nbsp;</div>
-              <p class="text-center">{{result.user.fullname | characters:8}}</p>
+              <p class="text-center truncate">{{result.user.fullname}}</p>
             </li>
           </ul>
         </div>
@@ -44,7 +44,8 @@
         <form class="form-inline" role="form">
           <div class="form-group col-md-2">
             <label class="sr-only" for="estimate-points">Estimate</label>
-            <input ng-model="newEstimate.points" type="number" class="form-control input-small" id="estimate-points">
+            <input ng-show="showCards" ng-model="newEstimate.points" type="number" class="form-control input-small" id="estimate-points">
+            <input ng-hide="showCards" value="?" type="text" disabled="disabled" class="form-control input-small" id="estimate-points">
           </div>
           <button type="submit" class="btn btn-success" ng-click="acceptRound()">Accept round</button>
           <button type="submit" class="btn btn-primary" ng-click="playAgain()" ng-disabled="disablePlayAgainAndRevealButtons">Play again</button>
@@ -57,7 +58,7 @@
     <div ng-show="!game.estimate" class="alert alert-info">
       <span class="glyphicon glyphicon-exclamation-sign"></span>
       <strong>Hi {{fp.user.fullname}}!</strong>
-      <span ng-hide="isOwner">Wait a new round start.</span>
+      <span ng-hide="isOwner">Wait for a new round to start.</span>
       <span ng-show="isOwner">Add or select a story to start a new round.</span>
     </div>
     <!-- Create story -->
@@ -114,7 +115,7 @@
                 </div>
                 <a href="" ng-click="setStory($index)">{{story.title}}</a>
                 <p>{{story.notes}}</p>
-                <hr ng-show="!$last">
+                <hr ng-show="unestimatedStoriesCount > 1 && !$last">
               </li>
             </ul>
           </div>
@@ -130,6 +131,7 @@
   </div>
   <div class="col-md-4">
     <div class="affix">
+      <!--
       <div class="btn-group pull-right">
         <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
           <span class="glyphicon glyphicon-cog"></span>
@@ -142,6 +144,7 @@
           <li><a href="#" ng-click="logout()">Logout</a></li>
         </ul>
       </div>
+      -->
       <div>
         <h4>{{game.name}}</h4>
         <p>{{game.description}}</p>
@@ -150,7 +153,7 @@
         <h5>Participants ({{totalOfOnlineParticipants()}})</h5>
         <ul class="list-unstyled">
           <li ng-repeat="participant in game.participants" ng-show="participant.online == true">
-            {{participant.fullname | characters:25}}
+            {{participant.fullname}}
             <span ng-show="participant.id == game.owner.id">(moderator)</span>
           </li>
         </ul>
