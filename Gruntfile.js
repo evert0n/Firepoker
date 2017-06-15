@@ -249,6 +249,8 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
           src: [
+            'CNAME',
+            'README.md',
             '*.{ico,txt}',
             '.htaccess',
             'components/**/*',
@@ -259,7 +261,8 @@ module.exports = function (grunt) {
     },
     'gh-pages': {
       options: {
-        base: 'dist'
+        base: 'dist',
+        repo: 'git@github.com:Wizehive/Firepoker.git'
       },
       src: ['**']
     }
