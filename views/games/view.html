@@ -23,7 +23,7 @@
         <div ng-hide="game.estimate.results">
           <p class="text-center text-muted">Select your estimate</p>
         </div>
-        <div ng-show="game.estimate.results">
+        <div id="estimate-results" ng-show="game.estimate.results">
           <ul class="list-inline">
             <li ng-repeat="result in game.estimate.results" class="list-item">
               <div ng-show="showCards || result.user.id == fp.user.id" class="card text-center" href="#">{{result.points}}</div>
@@ -31,6 +31,12 @@
               <p class="text-center truncate">{{result.user.fullname}}</p>
             </li>
           </ul>
+          <div ng-show="totalOfOnlineParticipants() > 1" id="player-counter">
+              <span ng-bind="game.estimate.results.length"></span> of <span ng-bind="totalOfOnlineParticipants()"></span> players
+          </div>
+          <div ng-show="totalOfOnlineParticipants() <= 1" id="player-counter">
+              You seem to have confused this for planning solitaire.
+          </div>
         </div>
       </div>
       <!-- Card deck -->
