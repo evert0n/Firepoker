@@ -139,3 +139,13 @@ span:focus, span:focus:hover {
   border-color: #69c773;
   box-shadow: 0 1px 3px rgba(0,0,0,0.15) inset;
 }
+
+#estimate-results {
+    position: relative;
+}
+
+#player-counter {
+    position: absolute;
+    right: 0px;
+    bottom: 5px;
+}
