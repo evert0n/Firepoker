@@ -212,7 +212,7 @@ angular.module('firePokerApp')
           }
         });
       }
-    }
+    };
 
     // Set full name
     $scope.setFullname = function() {
