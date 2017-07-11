@@ -162,7 +162,7 @@
           <li ng-repeat="participant in game.participants" ng-show="participant.online == true">
             {{participant.fullname}}
             <span ng-show="participant.id == game.owner.id">(moderator)</span>
-			      <span ng-show="participant.hasVoted == true" class="glyphicon glyphicon-ok"></span>
+			      <span ng-show="participant.hasVoted == true" class="glyphicon glyphicon-ok text-success"></span>
           </li>
         </ul>
       </div>
