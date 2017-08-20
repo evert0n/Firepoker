@@ -379,11 +379,6 @@ angular.module('firePokerApp')
       $location.replace();
     };
 
-    // Wait 1 sec before show social buttons
-    $timeout(function() {
-      $scope.showSocialButtons = true;
-    }, 1000);
-
     // Redirect with a GID to create new games
     $scope.redirectToCreateNewGame();
 
