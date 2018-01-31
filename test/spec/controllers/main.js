@@ -51,8 +51,10 @@ describe('Controller: MainCtrl', function () {
 
   // Current valid/available card decks
   var VALID_CARD_DECKS = [
-    [0, 1, 2, 4, 8, 16, 32, 64, 128, '?'],
-    [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?']
+    [0, '½', 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'],
+    [0, '½', 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, '?'],
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, '?'],
+    ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '?']
   ];
 
   // Firebase URL
@@ -330,7 +332,7 @@ describe('Controller: MainCtrl', function () {
 
   it('should calculate the results average points', function() {
     setTestGame();
-    expect(scope.getResultsAverage()).toBe(11);
+    expect(scope.getResultsAverage()).toBe(8);
   });
 
   it('should give the total number of active participants in the game', function() {

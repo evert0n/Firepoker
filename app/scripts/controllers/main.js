@@ -223,18 +223,15 @@ angular.module('firePokerApp')
     };
 
     // Get estimate results average
+    // https://stackoverflow.com/a/20762713/1346039
     $scope.getResultsAverage = function() {
-      var avg = 0;
-      if ($scope.game.estimate.results) {
-        var sum = 0;
-        angular.forEach($scope.game.estimate.results, function(result) {
-          if (result.points && angular.isNumber(result.points)) {
-            sum += result.points;
-          }
-        });
-        avg = Math.ceil(sum / $scope.game.estimate.results.length);
-      }
-      return avg;
+      var arr = [];
+      angular.forEach($scope.game.estimate.results, function(result) {
+        arr.push(result.points);
+      });
+      return arr.sort(function(a,b) {
+        return arr.filter(function(v) { return v===a; }).length - arr.filter(function(v) { return v===b; }).length;
+      }).pop();
     };
 
     // Get total of active participants
@@ -249,8 +246,6 @@ angular.module('firePokerApp')
       }
       return totalOfOnlineParticipants;
     };
-
-    //
 
     // Accept
     $scope.acceptRound = function() {
@@ -294,8 +289,10 @@ angular.module('firePokerApp')
 
     // Card deck options
     $scope.decks = [
-      [0, 1, 2, 4, 8, 16, 32, 64, 128, '?'],
-      [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?']
+      [0, '½', 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'],
+      [0, '½', 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, '?'],
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, '?'],
+      ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', '?']
     ];
 
     // Set Defaults
