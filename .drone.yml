@@ -1,0 +1,19 @@
+pipeline:
+
+  test:
+    image: node:6-alpine
+    commands:
+      - npm install -g bower grunt-cli@0.1.x
+      - bower cache clean
+      - bower install --verbose
+      - grunt karma:unit
+    environment:
+      - NODE_ENV=test
+
+  # notify:
+  #   image: plugins/slack
+  #   secrets: [slack_webhook]
+  #   webhook: "${SLACK_WEBHOOK}"
+  #   channel: zenbot
+  #   when:
+  #     status: [ success, failure ]
