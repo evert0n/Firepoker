@@ -8,10 +8,10 @@ pipeline:
       # - apt-get update && apt-get install -y google-chrome-stable
       - npm install -g bower grunt-cli@0.1.x
       - bower cache clean --allow-root
-      - bower install --verbose --allow-root
+      - bower install --allow-root
       - grunt karma:unit
-    environment:
-      - NODE_ENV=test
+    # environment:
+    #   - NODE_ENV=test
 
   # notify:
   #   image: plugins/slack
