@@ -1,0 +1,24 @@
+pipeline:
+
+  test:
+    image: atlassianlabs/docker-node-jdk-chrome-firefox
+    commands:
+      # - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+      # - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+      # - apt-get update && apt-get install -y google-chrome-stable
+      - npm install -g bower grunt-cli@0.1.x
+      - npm install
+      - bower cache clean --silent --allow-root
+      - bower install --silent --allow-root
+      - grunt karma:unit
+      #- grunt --help
+    environment:
+      - NODE_ENV=test
+
+  # notify:
+  #   image: plugins/slack
+  #   secrets: [slack_webhook]
+  #   webhook: "${SLACK_WEBHOOK}"
+  #   channel: zenbot
+  #   when:
+  #     status: [ success, failure ]
