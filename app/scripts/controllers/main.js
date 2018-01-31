@@ -230,8 +230,7 @@ angular.module('firePokerApp')
         arr.push(result.points);
       });
       return arr.sort(function(a,b) {
-        return arr.filter(function(v) { return v===a }).length
-          - arr.filter(function(v) { return v===b }).length
+        return arr.filter(function(v) { return v===a; }).length - arr.filter(function(v) { return v===b; }).length;
       }).pop();
     };
 
