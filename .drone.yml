@@ -7,11 +7,13 @@ pipeline:
       # - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
       # - apt-get update && apt-get install -y google-chrome-stable
       - npm install -g bower grunt-cli@0.1.x
-      - bower cache clean --allow-root
-      - bower install --allow-root
+      - npm install
+      - bower cache clean --silent --allow-root
+      - bower install --silent --allow-root
       - grunt karma:unit
-    # environment:
-    #   - NODE_ENV=test
+      #- grunt --help
+    environment:
+      - NODE_ENV=test
 
   # notify:
   #   image: plugins/slack
