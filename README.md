@@ -1,4 +1,6 @@
-Firepoker [![Build Status](https://travis-ci.org/Wizehive/Firepoker.png?branch=master)](https://travis-ci.org/Wizehive/Firepoker) [![Build Status](https://drone.appsrv.com/api/badges/Wizehive/Firepoker/status.svg)](https://drone.appsrv.com/Wizehive/Firepoker)
+# Firepoker 
+
+[![Build Status](https://travis-ci.org/Wizehive/Firepoker.png?branch=master)](https://travis-ci.org/Wizehive/Firepoker) [![Build Status](https://drone.appsrv.com/api/badges/Wizehive/Firepoker/status.svg)](https://drone.appsrv.com/Wizehive/Firepoker)
 
 =========
 
