@@ -1,11 +1,14 @@
 pipeline:
 
   test:
-    image: node:6-alpine
+    image: atlassianlabs/docker-node-jdk-chrome-firefox
     commands:
+      # - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+      # - sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+      # - apt-get update && apt-get install -y google-chrome-stable
       - npm install -g bower grunt-cli@0.1.x
-      - bower cache clean
-      - bower install --verbose
+      - bower cache clean --allow-root
+      - bower install --verbose --allow-root
       - grunt karma:unit
     environment:
       - NODE_ENV=test
