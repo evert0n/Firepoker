@@ -1,6 +1,6 @@
 # Firepoker 
 
-[![Build Status](https://travis-ci.org/Wizehive/Firepoker.png?branch=master)](https://travis-ci.org/Wizehive/Firepoker) [![Build Status](https://drone.appsrv.com/api/badges/Wizehive/Firepoker/status.svg)](https://drone.appsrv.com/Wizehive/Firepoker)
+[![Build Status](https://drone.appsrv.com/api/badges/Wizehive/Firepoker/status.svg)](https://drone.appsrv.com/Wizehive/Firepoker)
 
 Agile Planning Poker® powered by Firebase and AngularJS
 
@@ -11,8 +11,7 @@ Planning Poker®, also called Scrum poker, is a consensus-based technique for es
 To read more, check out the [Wikipedia](http://en.wikipedia.org/wiki/Planning_poker) page.
 
 
-Getting Started
-=========
+## Getting Started
 
 * Clone the repository: `git clone https://github.com/Wizehive/Firepoker.git`
 * Install with [NPM](https://github.com/isaacs/npm): `npm install`
@@ -20,15 +19,13 @@ Getting Started
 * To run the local server: `grunt server`
 * To run unit tests: `grunt karma:unit`
 
-Contributing
-=========
+## Contributing
 
 Anyone and everyone is welcome to contribute. Clone the repository and fire your pull requests.
 
 Think you've found a bug or have a new feature to suggest? Let us know! [Open an issue](https://github.com/Wizehive/Firepoker/issues).
 
-Legal and License
-=========
+## Legal and License
 
 Planning Poker® is a registered trademark of [Mountain Goat Software, LLC](http://www.mountaingoatsoftware.com/).
 
