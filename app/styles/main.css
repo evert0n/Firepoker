@@ -80,11 +80,21 @@ body {
 }
 
 span[contenteditable=true] {
-   background: rgba(0,0,0,0); /* transparent bg */
-   resize:none; /* disable resizing */
-   display:block;
-   height:inherit;
-   padding:5px;
+  background: rgba(0,0,0,0); /* transparent bg */
+  resize:none; /* disable resizing */
+  display:block;
+  height:inherit;
+  padding:5px;
+}
+
+span[placeholder]:empty:before {
+  content: attr(placeholder);
+  color: #555;
+  font-style: italic;
+}
+
+span[placeholder]:empty:focus:before {
+  content: "";
 }
 
 .btn-start {

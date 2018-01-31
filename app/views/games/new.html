@@ -25,8 +25,10 @@
       <div class="form-group">
         <label for="deck">Choose the set of estimate cards you want to use.</label>
         <select class="form-control" id="deck" ng-model="newGame.deck" required>
-          <option value="0">0, 1, 2, 4, 8, 16, 32, 64, 128, and ?</option>
-          <option value="1">0, ½, 1, 2, 3, 5, 8, 13, 20, 40, 100, and ?</option>
+          <option value="0">Scrum: 0, ½, 1, 2, 3, 5, 8, 13, 20, 40, 100 and ?</option>
+          <option value="1">Fibonacci: 0, ½, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89 and ?</option>
+          <option value="2">Sequential: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 and ?</option>
+          <option value="3">T-Shirt: XXS, XS, S, M, L, XL, XXL and ?</option>
         </select>
       </div>
       <button type="submit" class="btn btn-success" ng-disabled="form.$invalid">Create game</button>
