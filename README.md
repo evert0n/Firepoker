@@ -1,4 +1,5 @@
-Firepoker [![Build Status](https://travis-ci.org/Wizehive/Firepoker.png?branch=master)](https://travis-ci.org/Wizehive/Firepoker) [![Code Climate](https://codeclimate.com/github/Wizehive/Firepoker/badges/gpa.svg)](https://codeclimate.com/github/Wizehive/Firepoker)
+Firepoker [![Build Status](https://travis-ci.org/Wizehive/Firepoker.png?branch=master)](https://travis-ci.org/Wizehive/Firepoker) [![Build Status](https://drone.appsrv.com/api/badges/Wizehive/Firepoker/status.svg)](https://drone.appsrv.com/Wizehive/Firepoker)
+
 =========
 
 Agile Planning Poker® powered by Firebase and AngularJS
