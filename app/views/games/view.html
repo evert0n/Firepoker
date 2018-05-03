@@ -4,9 +4,9 @@
     <!-- Estimated stories -->
     <div ng-repeat="story in game.stories | orderBy:'endedAt'" class="stories">
       <div ng-show="story.status == 'closed'" class="bordered">
-        <p class="text-right">Estimated: <span class="label label-danger">{{story.points || 0}}</span></p>
+        <p class="text-right">Estimated: <span class="label label-danger">{{story.points || 'N/A'}}</span></p>
         <h5 ng-bind-html-unsafe="story.title"></h5>
-        <p ng-bind-html-unsafe="store.notes"></p>
+        <p ng-bind-html-unsafe="story.notes"></p>
       </div>
     </div>
     <!-- Estimate story -->
@@ -17,7 +17,7 @@
           <span class="label label-success">CURRENT</span>
         </p>
         <h5><span ng-model="game.estimate.title" contenteditable="true" no-line-breaks="true">{{game.estimate.title}}</span></h5>
-        <p><span ng-model="game.estimate.notes" contenteditable="true">{{game.estimate.notes}}</span></p>
+        <p><span ng-model="game.estimate.notes" contenteditable="true" placeholder="Click to enter notes or description...">{{game.estimate.notes}}</span></p>
       </div>
       <!-- Estimates -->
       <div class="well">
@@ -51,7 +51,7 @@
         <form class="form-inline" role="form">
           <div class="form-group col-md-2">
             <label class="sr-only" for="estimate-points">Estimate</label>
-            <input ng-show="showCards" ng-model="newEstimate.points" type="number" class="form-control input-small" id="estimate-points">
+            <input ng-show="showCards" ng-model="newEstimate.points" type="text" class="form-control input-small" id="estimate-points">
             <input ng-hide="showCards" value="?" type="text" disabled class="form-control input-small" id="estimate-points">
           </div>
           <button type="submit" class="btn btn-success" ng-click="acceptRound()">Accept round</button>
