@@ -52,7 +52,7 @@ autoWatch = false;
 
 if (process.env.TRAVIS) {
   browsers = ['Firefox'];
-else if (process.env.CI === 'drone') {
+} else if (process.env.CI === 'drone') {
   browsers = ['PhantomJS'];
 } else {
   browsers = ['Chrome'];
