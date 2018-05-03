@@ -1,7 +1,8 @@
 pipeline:
 
   test:
-    image: atlassianlabs/docker-node-jdk-chrome-firefox
+    #image: atlassianlabs/docker-node-jdk-chrome-firefox
+    image: nightbringer/docker-phantomjs-nodejs
     commands:
       - npm install -g bower grunt-cli@0.1.x --silent
       - npm install --silent
