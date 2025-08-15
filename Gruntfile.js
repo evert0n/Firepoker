@@ -1,7 +1,6 @@
 'use strict';
-var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
 var mountFolder = function (connect, dir) {
-  return connect.static(require('path').resolve(dir));
+  return require('serve-static')(require('path').resolve(dir));
 };
 
 module.exports = function (grunt) {
@@ -40,7 +39,7 @@ module.exports = function (grunt) {
           '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ],
-        tasks: ['livereload']
+        tasks: []
       }
     },
     connect: {
@@ -53,7 +52,6 @@ module.exports = function (grunt) {
         options: {
           middleware: function (connect) {
             return [
-              lrSnippet,
               mountFolder(connect, '.tmp'),
               mountFolder(connect, yeomanConfig.app)
             ];
@@ -102,26 +100,6 @@ module.exports = function (grunt) {
       unit: {
         configFile: 'karma.conf.js',
         singleRun: true
-      }
-    },
-    coffee: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/scripts',
-          src: '{,*/}*.coffee',
-          dest: '.tmp/scripts',
-          ext: '.js'
-        }]
-      },
-      test: {
-        files: [{
-          expand: true,
-          cwd: 'test/spec',
-          src: '{,*/}*.coffee',
-          dest: '.tmp/spec',
-          ext: '.js'
-        }]
       }
     },
     compass: {
@@ -205,12 +183,7 @@ module.exports = function (grunt) {
         }]
       }
     },
-    cdnify: {
-      dist: {
-        html: ['<%= yeoman.dist %>/*.html']
-      }
-    },
-    ngmin: {
+    ngAnnotate: {
       dist: {
         files: [{
           expand: true,
@@ -229,7 +202,7 @@ module.exports = function (grunt) {
         }
       }
     },
-    rev: {
+    filerev: {
       dist: {
         files: {
           src: [
@@ -268,13 +241,9 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.renameTask('regarde', 'watch');
-
   grunt.registerTask('server', [
     'clean:server',
-    'coffee:dist',
     //'compass:server',
-    'livereload-start',
     'connect:livereload',
     'open',
     'watch'
@@ -282,7 +251,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', [
     'clean:server',
-    'coffee',
     //'compass',
     'connect:test',
     'karma'
@@ -292,7 +260,6 @@ module.exports = function (grunt) {
     'clean:dist',
     'jshint',
     'test',
-    'coffee',
     //'compass:dist',
     'useminPrepare',
     'imagemin',
@@ -300,10 +267,9 @@ module.exports = function (grunt) {
     'htmlmin',
     'concat',
     'copy',
-    'cdnify',
-    'ngmin',
+    'ngAnnotate',
     'uglify',
-    'rev',
+    'filerev',
     'usemin'
   ]);
 
